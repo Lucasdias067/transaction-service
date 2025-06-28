@@ -1,0 +1,44 @@
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UnauthorizedException
+} from '@nestjs/common'
+import { CreateUserUseCase } from 'src/modules/users/domain/use-cases/createUserUseCase'
+import { LoginUserUseCase } from 'src/modules/users/domain/use-cases/loginUserUseCase'
+import { UserLoginRequestDto, UserRequestDto } from '../dtos/user.dto'
+
+@Controller('/auth')
+export class UserController {
+  constructor(
+    private createUserUseCase: CreateUserUseCase,
+    private loginUserUseCase: LoginUserUseCase
+  ) {}
+
+  @Post('/sign-up')
+  async register(@Body() body: UserRequestDto) {
+    try {
+      const result = await this.createUserUseCase.execute(body)
+
+      if (result.isLeft()) throw result.value
+
+      return result.value
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  @Post('/sign-in')
+  async login(@Body() body: UserLoginRequestDto) {
+    try {
+      const result = await this.loginUserUseCase.execute(body)
+      
+      if (result.isLeft()) throw result.value
+
+      return result.value
+    } catch (error) {
+      throw new UnauthorizedException(error)
+    }
+  }
+}

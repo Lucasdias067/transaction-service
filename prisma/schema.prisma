@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  role     Role
+
+  category    Category[]
+  transaction Transaction[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id                 String            @id @default(uuid())
+  title              String
+  amount             Float
+  type               TransactionType
+  installmentNumber  Int?              @map("installment_number")
+  totalInstallments  Int?              @map("total_installments")
+  installmentGroupId String?           @unique @map("installment_group_id")
+  status             TransactionStatus
+  userId             String
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  categoryId         String
+  category           Category          @relation(fields: [categoryId], references: [id])
+  user               User              @relation(fields: [userId], references: [id])
+
+  @@unique([installmentGroupId, installmentNumber])
+  @@index([installmentGroupId])
+  @@map("transaction")
+}
+
+model Category {
+  id          String          @id @default(uuid())
+  name        String          @unique
+  type        TransactionType
+  userId      String?
+  User        User?           @relation(fields: [userId], references: [id])
+  Transaction Transaction[]
+
+  @@unique([name, type])
+  @@map("category")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+  RECEIVED
+}

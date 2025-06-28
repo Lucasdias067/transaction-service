@@ -1,0 +1,91 @@
+import { Injectable, Inject } from '@nestjs/common'
+
+import { PrismaService } from 'src/infra/prisma/prisma.service'
+import { randomUUID } from 'node:crypto'
+import { PaginateQuery } from 'src/core/dtos/dtos'
+import { TransactionRepository } from 'src/modules/transactions/domain/repositories/transaction.repository'
+import { Transaction, TransactionEntityProps } from 'src/modules/transactions/domain/entities/transaction.entity'
+import { PrismaTransactionMapper } from '../mappers/prisma.mapper'
+
+@Injectable()
+export class PrismaTransactionRepository implements TransactionRepository {
+  constructor(
+    @Inject('prismaService') private readonly prismaService: PrismaService
+  ) {}
+
+  async create(transaction: Transaction): Promise<Transaction> {
+    const prismaTransaction = await this.prismaService.transaction.create({
+      data: PrismaTransactionMapper.toPersistence(transaction)
+    })
+    return PrismaTransactionMapper.toEntity(prismaTransaction)
+  }
+
+  async createMany(transaction: Transaction): Promise<Transaction[]> {
+    const totalOfInstallments = transaction.totalInstallments ?? 1
+    const installmentGroupId = transaction.installmentGroupId ?? randomUUID()
+
+    const transactionInstances = Array.from({
+      length: totalOfInstallments
+    }).map((_, i) => {
+      const installmentDate = new Date(transaction.createdAt)
+      installmentDate.setMonth(installmentDate.getMonth() + i)
+
+      const props: TransactionEntityProps = {
+        id: transaction.id,
+        title: transaction.title,
+        amount: transaction.amount,
+        type: transaction.type,
+        userId: transaction.userId,
+        status: transaction.status,
+        categoryId: transaction.categoryId,
+        createdAt: installmentDate,
+        updatedAt: new Date(),
+        installmentNumber: i + 1,
+        totalInstallments: totalOfInstallments,
+        installmentGroupId: installmentGroupId
+      }
+
+      return Transaction.create(props)
+    })
+
+    const prismaData = transactionInstances.map(t =>
+      PrismaTransactionMapper.toPersistence(t)
+    )
+
+    await this.prismaService.transaction.createMany({
+      data: prismaData
+    })
+
+    const createdTransactions = await this.prismaService.transaction.findMany({
+      where: {
+        installmentGroupId: installmentGroupId
+      },
+      orderBy: {
+        installmentNumber: 'asc'
+      }
+    })
+
+    return createdTransactions.map(t => PrismaTransactionMapper.toEntity(t))
+  }
+
+  async list(
+    params: PaginateQuery
+  ): Promise<{ data: Transaction[]; total: number }> {
+    const page = Number(params.page) ?? 1
+    const per_page = Number(params.per_page) ?? 10
+
+    const skip = (page - 1) * per_page
+
+    const prismaTransaction = await this.prismaService.transaction.findMany({
+      skip,
+      take: per_page
+    })
+
+    const totalTransactions = await this.prismaService.transaction.count()
+
+    return {
+      data: prismaTransaction.map(t => PrismaTransactionMapper.toEntity(t)),
+      total: totalTransactions
+    }
+  }
+}
