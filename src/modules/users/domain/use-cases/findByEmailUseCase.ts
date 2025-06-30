@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { type Either, right } from 'src/core/logic/Either'
-import type {
-  UserResponseDto
-} from '../../infra/http/dtos/user.dto'
+import type { UserResponseDto } from '../../infra/http/dtos/user.dto'
 import { UserMapper } from '../mappers/user.mapper'
 import { UserRepository } from '../repositories/user.repository'
 

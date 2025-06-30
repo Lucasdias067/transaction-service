@@ -4,7 +4,10 @@ import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { randomUUID } from 'node:crypto'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { TransactionRepository } from 'src/modules/transactions/domain/repositories/transaction.repository'
-import { Transaction, TransactionEntityProps } from 'src/modules/transactions/domain/entities/transaction.entity'
+import {
+  Transaction,
+  TransactionEntityProps
+} from 'src/modules/transactions/domain/entities/transaction.entity'
 import { PrismaTransactionMapper } from '../mappers/prisma.mapper'
 
 @Injectable()

@@ -1,7 +1,7 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "files": {
-    "include": ["src/**/*.ts", "test/**/*.ts", "prisma/**/*.ts"]
+    "includes": ["src/**/*.ts", "test/**/*.ts", "prisma/**/*.ts"]
   },
   "formatter": {
     "enabled": true,
@@ -12,26 +12,18 @@
     "lineWidth": 80,
     "attributePosition": "auto"
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": false,
-      "a11y": {
-        "noBlankTarget": "error"
-      },
       "complexity": {
         "noExtraBooleanCast": "error",
-        "noMultipleSpacesInRegularExpressionLiterals": "error",
         "noUselessCatch": "error",
         "noUselessConstructor": "error",
         "noUselessLoneBlockStatements": "error",
         "noUselessRename": "error",
         "noUselessTernary": "error",
         "noVoid": "off",
-        "noWith": "error",
         "useArrowFunction": "off",
         "useLiteralKeys": "error",
         "useRegexLiterals": "error"
@@ -47,7 +39,6 @@
         "noGlobalObjectCalls": "error",
         "noInvalidConstructorSuper": "error",
         "noInvalidUseBeforeDeclaration": "error",
-        "noNewSymbol": "error",
         "noPrecisionLoss": "error",
         "noSelfAssign": "error",
         "noSwitchDeclarations": "error",
@@ -56,7 +47,6 @@
         "noUnreachableSuper": "error",
         "noUnsafeFinally": "error",
         "noUnusedVariables": "warn",
-        "useArrayLiterals": "error",
         "useExhaustiveDependencies": "off",
         "useIsNan": "error",
         "useJsxKeyInIterable": "error"
@@ -66,8 +56,6 @@
         "noGlobalEval": "error"
       },
       "style": {
-        "noCommaOperator": "error",
-        "noVar": "warn",
         "useConst": "error",
         "useSingleVarDeclarator": "error"
       },
@@ -98,18 +86,9 @@
         "noSelfCompare": "error",
         "noShadowRestrictedNames": "error",
         "noUnsafeNegation": "error",
-        "useDefaultSwitchClauseLast": "error",
-        "useValidTypeof": "error"
+        "useDefaultSwitchClauseLast": "error"
       }
-    },
-    "ignore": [
-      "**/*.js",
-      "**/*.mjs",
-      "**/*.cjs",
-      "packages/**/*",
-      "out/**/*",
-      "node_modules/**/*"
-    ]
+    }
   },
   "javascript": {
     "parser": {

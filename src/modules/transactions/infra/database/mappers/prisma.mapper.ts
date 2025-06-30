@@ -1,6 +1,8 @@
 import { Prisma } from '@prisma/client'
-import { Transaction, TransactionEntityProps } from 'src/modules/transactions/domain/entities/transaction.entity'
-
+import {
+  Transaction,
+  TransactionEntityProps
+} from 'src/modules/transactions/domain/entities/transaction.entity'
 
 export class PrismaTransactionMapper {
   static toEntity(

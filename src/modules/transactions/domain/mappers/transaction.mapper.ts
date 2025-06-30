@@ -1,10 +1,15 @@
-import { TransactionRequestDto } from "../../infra/http/dtos/transaction.dto"
-import { Transaction, TransactionEntityProps } from "../entities/transaction.entity"
-
+import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
+import {
+  Transaction,
+  TransactionEntityProps
+} from '../entities/transaction.entity'
 
 export class TransactionMapper {
-  static toEntity(transaction: TransactionRequestDto, userId: string): Transaction {
-    const transactionDomain = Transaction.create({...transaction, userId})
+  static toEntity(
+    transaction: TransactionRequestDto,
+    userId: string
+  ): Transaction {
+    const transactionDomain = Transaction.create({ ...transaction, userId })
     return transactionDomain
   }
 

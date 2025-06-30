@@ -33,7 +33,7 @@ export class UserController {
   async login(@Body() body: UserLoginRequestDto) {
     try {
       const result = await this.loginUserUseCase.execute(body)
-      
+
       if (result.isLeft()) throw result.value
 
       return result.value

@@ -7,13 +7,13 @@ import {
   Query,
   Req
 } from '@nestjs/common'
+import { Request } from 'express'
+import { PaginateQuery } from 'src/core/dtos/dtos'
 import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
+import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
+import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
 import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
-import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
-import { PaginateQuery } from 'src/core/dtos/dtos'
-import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
-import { Request } from 'express'
 
 @Controller('/transactions')
 export class TransactionController {
@@ -24,7 +24,7 @@ export class TransactionController {
 
   @Post()
   async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
-    const {user} = request
+    const { user } = request
     try {
       const result = await this.createTransactionUseCase.execute(body, user.id)
 

@@ -15,7 +15,10 @@ type Response = Either<
 export class CreateTransactionUseCase {
   constructor(private transactionRespository: TransactionRepository) {}
 
-  async execute(transaction: TransactionRequestDto, userId: string): Promise<Response> {
+  async execute(
+    transaction: TransactionRequestDto,
+    userId: string
+  ): Promise<Response> {
     if (transaction.amount <= 0) {
       return left(
         new CreateTransactionError('Amount must be greater than zero')
@@ -27,10 +30,13 @@ export class CreateTransactionUseCase {
       transaction.totalInstallments > 1
 
     if (isInstallmentTransaction) {
-      const transactionDomain = TransactionMapper.toEntity({
-        ...transaction,
-        installmentNumber: undefined
-      }, userId)
+      const transactionDomain = TransactionMapper.toEntity(
+        {
+          ...transaction,
+          installmentNumber: undefined
+        },
+        userId
+      )
 
       const transactionValues =
         await this.transactionRespository.createMany(transactionDomain)
