@@ -1,10 +1,10 @@
-import { Either, left, right } from 'src/core/logic/Either'
-import { TransactionEntityProps } from '../entities/transaction.entity'
-import { CreateTransactionError } from './errors/CreateTransactionError'
 import { Injectable } from '@nestjs/common'
+import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
+import { TransactionEntityProps } from '../entities/transaction.entity'
 import { TransactionMapper } from '../mappers/transaction.mapper'
 import { TransactionRepository } from '../repositories/transaction.repository'
+import { CreateTransactionError } from './errors/CreateTransactionError'
 
 type Response = Either<
   CreateTransactionError,

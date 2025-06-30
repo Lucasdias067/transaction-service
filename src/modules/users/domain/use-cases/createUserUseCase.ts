@@ -1,8 +1,8 @@
-import { Either, right } from 'src/core/logic/Either'
-import { UserRepository } from '../repositories/user.repository'
-import { UserRequestDto, UserResponseDto } from '../../infra/http/dtos/user.dto'
 import { Injectable } from '@nestjs/common'
+import { Either, right } from 'src/core/logic/Either'
+import { UserRequestDto, UserResponseDto } from '../../infra/http/dtos/user.dto'
 import { UserMapper } from '../mappers/user.mapper'
+import { UserRepository } from '../repositories/user.repository'
 
 type Response = Either<Error, UserResponseDto>
 

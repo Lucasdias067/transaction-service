@@ -1,10 +1,10 @@
-import { Either, left, right } from 'src/core/logic/Either'
 import { Injectable } from '@nestjs/common'
-import { ListTransactionError } from './errors/ListTransactionError'
 import { PaginateQuery } from 'src/core/dtos/dtos'
+import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionMapper } from '../mappers/transaction.mapper'
 import { TransactionRepository } from '../repositories/transaction.repository'
+import { ListTransactionError } from './errors/ListTransactionError'
 
 type Response = Either<ListTransactionError, TransactionResponseDto>
 
