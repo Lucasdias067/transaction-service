@@ -4,7 +4,8 @@ import {
   Controller,
   Get,
   Post,
-  Query
+  Query,
+  Req
 } from '@nestjs/common'
 import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
 import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
@@ -12,6 +13,7 @@ import { TransactionRequestDto } from '../dtos/transaction.dto'
 import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
+import { Request } from 'express'
 
 @Controller('/transactions')
 export class TransactionController {
@@ -21,11 +23,10 @@ export class TransactionController {
   ) {}
 
   @Post()
-  async create(@Body() body: TransactionRequestDto) {
+  async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
+    const {user} = request
     try {
-      const result = await this.createTransactionUseCase.execute({
-        ...body
-      })
+      const result = await this.createTransactionUseCase.execute(body, user.id)
 
       if (result.isLeft()) throw result.value
 

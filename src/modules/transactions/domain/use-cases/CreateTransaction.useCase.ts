@@ -2,10 +2,9 @@ import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionEntityProps } from '../entities/transaction.entity'
 import { CreateTransactionError } from './errors/CreateTransactionError'
 import { Injectable } from '@nestjs/common'
-import { PrismaTransactionRepository } from '../../infra/database/repositories/prisma.repository'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionMapper } from '../mappers/transaction.mapper'
-
+import { TransactionRepository } from '../repositories/transaction.repository'
 
 type Response = Either<
   CreateTransactionError,
@@ -14,9 +13,9 @@ type Response = Either<
 
 @Injectable()
 export class CreateTransactionUseCase {
-  constructor(private transactionRespository: PrismaTransactionRepository) {}
+  constructor(private transactionRespository: TransactionRepository) {}
 
-  async execute(transaction: TransactionRequestDto): Promise<Response> {
+  async execute(transaction: TransactionRequestDto, userId: string): Promise<Response> {
     if (transaction.amount <= 0) {
       return left(
         new CreateTransactionError('Amount must be greater than zero')
@@ -31,7 +30,7 @@ export class CreateTransactionUseCase {
       const transactionDomain = TransactionMapper.toEntity({
         ...transaction,
         installmentNumber: undefined
-      })
+      }, userId)
 
       const transactionValues =
         await this.transactionRespository.createMany(transactionDomain)
@@ -44,7 +43,7 @@ export class CreateTransactionUseCase {
     }
 
     const transactionValue = await this.transactionRespository.create(
-      TransactionMapper.toEntity(transaction)
+      TransactionMapper.toEntity(transaction, userId)
     )
 
     return right(TransactionMapper.toHTTP(transactionValue))

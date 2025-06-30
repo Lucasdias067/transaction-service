@@ -7,14 +7,12 @@ import { TransactionRepository } from './domain/repositories/transaction.reposit
 import { PrismaTransactionRepository } from './infra/database/repositories/prisma.repository'
 
 @Module({
-  imports: [],
   controllers: [TransactionController],
   providers: [
     {
       provide: TransactionRepository,
       useClass: PrismaTransactionRepository
     },
-    PrismaTransactionRepository,
     CreateTransactionUseCase,
     ListTransactionUseCase
   ]

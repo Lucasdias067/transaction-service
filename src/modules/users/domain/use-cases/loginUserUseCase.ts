@@ -1,10 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
-import { type Either, right } from 'src/core/logic/Either'
-import type {
-  UserLoginRequestDto,
-  UserResponseDto
-} from '../../infra/http/dtos/user.dto'
-import type { UserRepository } from '../repositories/user.repository'
+import { Either, right } from "src/core/logic/Either"
+import { UserLoginRequestDto, UserResponseDto } from "../../infra/http/dtos/user.dto"
+import { UserRepository } from "../repositories/user.repository"
+import { BadRequestException, Injectable } from "@nestjs/common"
 
 type Response = Either<Error, UserResponseDto | null>
 

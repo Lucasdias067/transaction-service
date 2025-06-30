@@ -3,8 +3,8 @@ import { Transaction, TransactionEntityProps } from "../entities/transaction.ent
 
 
 export class TransactionMapper {
-  static toEntity(transaction: TransactionRequestDto): Transaction {
-    const transactionDomain = Transaction.create(transaction)
+  static toEntity(transaction: TransactionRequestDto, userId: string): Transaction {
+    const transactionDomain = Transaction.create({...transaction, userId})
     return transactionDomain
   }
 

@@ -3,14 +3,14 @@ import { Injectable } from '@nestjs/common'
 import { ListTransactionError } from './errors/ListTransactionError'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'
-import { PrismaTransactionRepository } from '../../infra/database/repositories/prisma.repository'
 import { TransactionMapper } from '../mappers/transaction.mapper'
+import { TransactionRepository } from '../repositories/transaction.repository'
 
 type Response = Either<ListTransactionError, TransactionResponseDto>
 
 @Injectable()
 export class ListTransactionUseCase {
-  constructor(private transactionRespository: PrismaTransactionRepository) {}
+  constructor(private transactionRespository: TransactionRepository) {}
 
   async execute(params: PaginateQuery): Promise<Response> {
     const { page, per_page } = params

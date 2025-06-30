@@ -4,7 +4,7 @@ import type {
   UserResponseDto
 } from '../../infra/http/dtos/user.dto'
 import { UserMapper } from '../mappers/user.mapper'
-import type { UserRepository } from '../repositories/user.repository'
+import { UserRepository } from '../repositories/user.repository'
 
 type Response = Either<Error, UserResponseDto>
 
