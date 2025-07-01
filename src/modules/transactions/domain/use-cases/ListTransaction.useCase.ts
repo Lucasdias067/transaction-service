@@ -28,7 +28,7 @@ export class ListTransactionUseCase {
     }
 
     const result = {
-      transactions,
+      data: transactions,
       meta: {
         currentPage: Number(page),
         perPage: Number(per_page),

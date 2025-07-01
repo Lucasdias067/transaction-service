@@ -14,6 +14,6 @@ export interface TransactionRequestDto {
 }
 
 export interface TransactionResponseDto {
-  transactions: TransactionEntityProps[]
+  data: TransactionEntityProps[]
   meta: PaginatedResponse
 }

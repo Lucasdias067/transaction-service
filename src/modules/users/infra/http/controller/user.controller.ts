@@ -17,9 +17,9 @@ export class UserController {
   ) {}
 
   @Post('/sign-up')
-  async register(@Body() body: UserRequestDto) {
+  async register(@Body() data: UserRequestDto) {
     try {
-      const result = await this.createUserUseCase.execute(body)
+      const result = await this.createUserUseCase.execute(data)
 
       if (result.isLeft()) throw result.value
 
