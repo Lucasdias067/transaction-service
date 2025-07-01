@@ -27,6 +27,6 @@ import { AuthController } from './infra/http/controller/auth.controller'
     JwtAuthGuard,
     RolesGuard
   ],
-  exports: [JwtModules]
+  exports: [JwtModules.forRoot()]
 })
 export class AuthModule {}

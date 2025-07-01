@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { UserEntity } from 'src/modules/users/domain/entities/user.entity'
 
 export class PrismaUserMapper {
