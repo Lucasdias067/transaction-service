@@ -1,7 +1,11 @@
-import { User } from '@prisma/client'
+interface UserPayload {
+  sub: string
+  email: string
+  roles: any
+}
 
-declare module 'express-serve-static-core' {
+declare namespace Express {
   interface Request {
-    user: User
+    user?: UserPayload
   }
 }

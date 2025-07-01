@@ -1,0 +1,20 @@
+import { Injectable } from '@nestjs/common'
+import { type Either, left, right } from 'src/core/logic/Either'
+import type { UserResponseDto } from '../../infra/http/dtos/user.dto'
+import { UserMapper } from '../mappers/user.mapper'
+import { UserRepository } from '../repositories/user.repository'
+
+type Response = Either<Error, UserResponseDto>
+
+@Injectable()
+export class FindByEmailUserUseCase {
+  constructor(private userRepository: UserRepository) {}
+
+  async execute(email: string): Promise<Response> {
+    const user = await this.userRepository.findByEmail(email)
+
+    if (!user) return left(new Error())
+
+    return right(UserMapper.toHTTP(user))
+  }
+}
