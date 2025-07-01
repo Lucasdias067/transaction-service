@@ -1,10 +1,7 @@
-interface UserPayload {
+type UserPayload = {
   sub: string
   email: string
-  roles: Roles
+  roles: Role
 }
 
-interface Roles {
-  Admin: 'ADMIN'
-  User: 'USER'
-}
+type Role = 'ADMIN' | 'USER'

@@ -2,8 +2,8 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { Either, left, right } from 'src/core/logic/Either'
-import { UserLoginRequestDto } from '../../infra/http/dtos/user.dto'
-import { UserRepository } from '../repositories/user.repository'
+import { UserRepository } from 'src/modules/users/domain/repositories/user.repository'
+import { UserLoginRequestDto } from '../../infra/http/dtos/auth.dto'
 
 type Response = Either<Error, { access_token: string }>
 

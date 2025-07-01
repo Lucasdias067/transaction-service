@@ -32,7 +32,7 @@ export class UserResponseDto {
   id: string
   name: string
   email: string
-  role: 'USER' | 'ADMIN'
+  role: Role
 }
 
 export class UserLoginRequestDto {

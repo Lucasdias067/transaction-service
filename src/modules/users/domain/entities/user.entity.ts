@@ -3,7 +3,7 @@ interface UsersEntityProps {
   name: string
   email: string
   password: string
-  role: 'USER' | 'ADMIN'
+  role: Role
 }
 
 export class UserEntity {
@@ -35,7 +35,7 @@ export class UserEntity {
     return this.props.password
   }
 
-  get role(): 'USER' | 'ADMIN' {
+  get role(): Role {
     return this.props.role
   }
 }
