@@ -12,7 +12,7 @@ export class PrismaTransactionMapper {
       id: prismaTransaction.id,
       title: prismaTransaction.title,
       amount: prismaTransaction.amount,
-      type: prismaTransaction.type as 'INCOME' | 'EXPENSE',
+      type: prismaTransaction.type,
       userId: prismaTransaction.userId,
       status: prismaTransaction.status,
       categoryId: prismaTransaction.categoryId,

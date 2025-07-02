@@ -84,7 +84,7 @@ export class Transaction implements TransactionEntityProps {
       | TransactionEntityProps
   ): Transaction {
     return new Transaction({
-      id: 'id' in transaction && transaction.id ? transaction.id : randomUUID(),
+      id: 'id' in transaction ? transaction.id : randomUUID(),
       title: transaction.title,
       amount: transaction.amount,
       type: transaction.type,
@@ -93,7 +93,7 @@ export class Transaction implements TransactionEntityProps {
       status: transaction.status ?? 'PENDING',
       installmentNumber: transaction.installmentNumber ?? 1,
       totalInstallments: transaction.totalInstallments ?? 1,
-      installmentGroupId: transaction.installmentGroupId ?? randomUUID(),
+      installmentGroupId: transaction.installmentGroupId,
       createdAt: transaction.createdAt,
       updatedAt: 'updatedAt' in transaction ? transaction.updatedAt : new Date()
     })

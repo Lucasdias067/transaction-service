@@ -1,4 +1,4 @@
-// biome-ignore assist/source/organizeImports: <explanation>
+// biome-ignore assist/source/organizeImports: <>
 import { Inject, Injectable } from '@nestjs/common'
 import { randomUUID } from 'node:crypto'
 import { PaginateQuery } from 'src/core/dtos/dtos'
@@ -23,7 +23,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
   async createMany(transaction: Transaction): Promise<Transaction[]> {
     const totalOfInstallments = transaction.totalInstallments ?? 1
-    const installmentGroupId = transaction.installmentGroupId ?? randomUUID()
+    const installmentGroupId = randomUUID()
 
     const transactionInstances = Array.from({
       length: totalOfInstallments
@@ -32,7 +32,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
       installmentDate.setMonth(installmentDate.getMonth() + i)
 
       const props = {
-        id: transaction.id,
+        id: randomUUID(),
         title: transaction.title,
         amount: transaction.amount,
         type: transaction.type,
@@ -43,7 +43,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
         updatedAt: new Date(),
         installmentNumber: i + 1,
         totalInstallments: totalOfInstallments,
-        installmentGroupId: installmentGroupId
+        installmentGroupId
       }
 
       return Transaction.create(props)
@@ -53,13 +53,15 @@ export class PrismaTransactionRepository implements TransactionRepository {
       PrismaTransactionMapper.toPersistence
     )
 
+    console.log(prismaData)
+
     await this.prismaService.transaction.createMany({
       data: prismaData
     })
 
     const createdTransactions = await this.prismaService.transaction.findMany({
       where: {
-        installmentGroupId: installmentGroupId
+        installmentGroupId
       },
       orderBy: {
         installmentNumber: 'asc'
