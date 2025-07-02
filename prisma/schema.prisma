@@ -28,7 +28,7 @@ model Transaction {
   type               TransactionType
   installmentNumber  Int?              @map("installment_number")
   totalInstallments  Int?              @map("total_installments")
-  installmentGroupId String?           @unique @map("installment_group_id")
+  installmentGroupId String?           @map("installment_group_id")
   status             TransactionStatus
   userId             String
   createdAt          DateTime          @default(now()) @map("created_at")
@@ -50,7 +50,7 @@ model Category {
   User        User?           @relation(fields: [userId], references: [id])
   Transaction Transaction[]
 
-  @@unique([name, type])
+  @@unique([id, type])
   @@map("category")
 }
 

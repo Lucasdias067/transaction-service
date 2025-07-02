@@ -24,10 +24,10 @@ export class TransactionController {
 
   @Post()
   async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
-    const { sub: userId } = request.user!
+    // const { sub: userId } = request.user!
 
     try {
-      const result = await this.createTransactionUseCase.execute(body, userId)
+      const result = await this.createTransactionUseCase.execute(body, '1')
 
       if (result.isLeft()) throw result.value
 

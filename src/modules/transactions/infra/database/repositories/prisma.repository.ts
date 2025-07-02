@@ -50,8 +50,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
       return Transaction.create(props)
     })
 
-    const prismaData = transactionInstances.map(t =>
-      PrismaTransactionMapper.toPersistence(t)
+    const prismaData = transactionInstances.map(
+      PrismaTransactionMapper.toPersistence
     )
 
     await this.prismaService.transaction.createMany({
@@ -67,7 +67,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }
     })
 
-    return createdTransactions.map(t => PrismaTransactionMapper.toEntity(t))
+    return createdTransactions.map(PrismaTransactionMapper.toEntity)
   }
 
   async list(
