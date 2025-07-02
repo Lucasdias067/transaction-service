@@ -5,10 +5,12 @@ import {
   Get,
   Post,
   Query,
-  Req
+  Req,
+  UseGuards
 } from '@nestjs/common'
 import { Request } from 'express'
 import { PaginateQuery } from 'src/core/dtos/dtos'
+import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
 import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
 import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
@@ -16,6 +18,7 @@ import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-case
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
 @Controller('/transactions')
+@UseGuards(JwtAuthGuard)
 export class TransactionController {
   constructor(
     private readonly createTransactionUseCase: CreateTransactionUseCase,
@@ -24,7 +27,9 @@ export class TransactionController {
 
   @Post()
   async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
-    // const { sub: userId } = request.user!
+    const { sub: userId } = request.user!
+
+    console.log(userId)
 
     try {
       const result = await this.createTransactionUseCase.execute(body, '1')
