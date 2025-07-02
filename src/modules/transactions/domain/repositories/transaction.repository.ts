@@ -4,7 +4,9 @@ import { Transaction } from '../entities/transaction.entity'
 export abstract class TransactionRepository {
   abstract create(transaction: Transaction): Promise<Transaction>
   abstract createMany(transaction: Transaction): Promise<Transaction[]>
-  abstract list(params: PaginateQuery): Promise<any>
+  abstract list(
+    params: PaginateQuery
+  ): Promise<{ data: Transaction[]; total: number }>
   // abstract findById(id: string): Promise<Transaction | null>;
   // abstract save(id: string, transaction: Partial<Transaction>): Promise<Transaction>;
   // abstract delete(id: string): Promise<void>;

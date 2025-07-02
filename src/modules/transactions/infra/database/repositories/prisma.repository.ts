@@ -85,8 +85,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
     const totalTransactions = await this.prismaService.transaction.count()
 
+    const data = prismaTransaction.map(PrismaTransactionMapper.toEntity)
+
     return {
-      data: prismaTransaction.map(t => PrismaTransactionMapper.toEntity(t)),
+      data,
       total: totalTransactions
     }
   }
