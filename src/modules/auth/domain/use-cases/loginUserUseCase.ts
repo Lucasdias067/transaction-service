@@ -27,9 +27,15 @@ export class LoginUserUseCase {
       return left(new BadRequestException('Credentials is not valid'))
     }
 
-    const payload: UserPayload = { sub: user.id, email: user.email, roles: user.role }
+    const payload: UserPayload = {
+      sub: user.id,
+      email: user.email,
+      roles: user.role
+    }
 
     const token = await this.jwtService.signAsync(payload)
+
+    console.log(token)
 
     return right({ access_token: `Bearer ${token}` })
   }
