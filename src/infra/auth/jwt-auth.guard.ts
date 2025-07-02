@@ -1,4 +1,9 @@
-import { ExecutionContext, Injectable } from '@nestjs/common'
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException
+} from '@nestjs/common'
+import { JsonWebTokenError, TokenExpiredError } from '@nestjs/jwt'
 import { AuthGuard } from '@nestjs/passport'
 import { Observable } from 'rxjs'
 
@@ -12,5 +17,25 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     return super.canActivate(context)
+  }
+
+  handleRequest(err: any, user: any, info: any) {
+    if (info instanceof TokenExpiredError) {
+      throw new UnauthorizedException(
+        'Sua sessão expirou, por favor faça o login novamente.'
+      )
+    }
+
+    if (info instanceof JsonWebTokenError) {
+      throw new UnauthorizedException('Token inválido. Acesso negado.')
+    }
+
+    if (err || !user) {
+      const message =
+        info?.message || 'Você não tem permissão para acessar este recurso.'
+      throw new UnauthorizedException(message)
+    }
+
+    return user
   }
 }
