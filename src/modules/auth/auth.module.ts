@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModules } from 'src/infra/auth/jwt.module'
 import { JwtStrategy } from 'src/infra/auth/jwt.strategy'
@@ -17,10 +16,6 @@ import { AuthController } from './infra/http/controller/auth.controller'
     {
       provide: UserRepository,
       useClass: PrismaUserRepository
-    },
-    {
-      provide: 'jwtService',
-      useClass: JwtService
     },
     LoginUserUseCase,
     JwtStrategy,

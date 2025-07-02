@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { LoginUserUseCase } from 'src/modules/auth/domain/use-cases/loginUserUseCase'
 import { UserLoginRequestDto } from '../dtos/auth.dto'
 
@@ -15,7 +15,8 @@ export class AuthController {
 
       return result.value
     } catch (error) {
-      throw new UnauthorizedException(error)
+      console.log(error)
+      return error
     }
   }
 }

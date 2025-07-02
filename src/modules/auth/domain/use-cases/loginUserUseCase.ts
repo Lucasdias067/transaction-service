@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { Either, left, right } from 'src/core/logic/Either'
@@ -11,7 +11,7 @@ type Response = Either<Error, { access_token: string }>
 export class LoginUserUseCase {
   constructor(
     private userRepository: UserRepository,
-    @Inject('jwtService') private readonly jwtService: JwtService
+    private readonly jwtService: JwtService
   ) {}
 
   async execute(data: UserLoginRequestDto): Promise<Response> {
@@ -34,8 +34,6 @@ export class LoginUserUseCase {
     }
 
     const token = await this.jwtService.signAsync(payload)
-
-    console.log(token)
 
     return right({ access_token: `Bearer ${token}` })
   }
