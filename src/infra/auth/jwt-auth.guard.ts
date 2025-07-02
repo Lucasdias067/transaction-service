@@ -22,17 +22,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err: any, user: any, info: any) {
     if (info instanceof TokenExpiredError) {
       throw new UnauthorizedException(
-        'Sua sessão expirou, por favor faça o login novamente.'
+        'Your session has expired, please log in again.'
       )
     }
 
     if (info instanceof JsonWebTokenError) {
-      throw new UnauthorizedException('Token inválido. Acesso negado.')
+      throw new UnauthorizedException('Invalid token. Access denied.')
     }
 
     if (err || !user) {
       const message =
-        info?.message || 'Você não tem permissão para acessar este recurso.'
+        info?.message || 'You do not have permission to access this resource.'
       throw new UnauthorizedException(message)
     }
 
