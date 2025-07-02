@@ -1,5 +1,4 @@
 import { PaginatedResponse } from 'src/core/dtos/dtos'
-import { TransactionEntityProps } from 'src/modules/transactions/domain/entities/transaction.entity'
 
 export interface TransactionRequestDto {
   title: string
@@ -13,7 +12,7 @@ export interface TransactionRequestDto {
   createdAt: Date
 }
 
-export interface TransactionResponseDto {
-  data: TransactionEntityProps[]
+export interface TransactionResponseDto<T> {
+  data: T[]
   meta: PaginatedResponse
 }

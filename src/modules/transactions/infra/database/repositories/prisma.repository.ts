@@ -1,12 +1,11 @@
-import { randomUUID } from 'node:crypto'
+// biome-ignore assist/source/organizeImports: <explanation>
 import { Inject, Injectable } from '@nestjs/common'
+import { randomUUID } from 'node:crypto'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { PrismaService } from 'src/infra/prisma/prisma.service'
-import {
-  Transaction,
-  TransactionEntityProps
-} from 'src/modules/transactions/domain/entities/transaction.entity'
+import { Transaction } from 'src/modules/transactions/domain/entities/transaction.entity'
 import { TransactionRepository } from 'src/modules/transactions/domain/repositories/transaction.repository'
+import { TransactionResponseDto } from '../../http/dtos/transaction.dto'
 import { PrismaTransactionMapper } from '../mappers/prisma.mapper'
 
 @Injectable()
@@ -32,7 +31,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
       const installmentDate = new Date(transaction.createdAt)
       installmentDate.setMonth(installmentDate.getMonth() + i)
 
-      const props: TransactionEntityProps = {
+      const props = {
         id: transaction.id,
         title: transaction.title,
         amount: transaction.amount,
@@ -72,7 +71,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
   async list(
     params: PaginateQuery
-  ): Promise<{ data: Transaction[]; total: number }> {
+  ): Promise<TransactionResponseDto<Transaction>> {
     const page = Number(params.page) ?? 1
     const per_page = Number(params.per_page) ?? 10
 
@@ -89,7 +88,9 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
     return {
       data,
-      total: totalTransactions
+      meta: {
+        total: totalTransactions
+      }
     }
   }
 }

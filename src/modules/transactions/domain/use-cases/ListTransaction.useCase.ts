@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'
+import { TransactionEntityProps } from '../entities/transaction.entity'
 import { TransactionMapper } from '../mappers/transaction.mapper'
 import { TransactionRepository } from '../repositories/transaction.repository'
 import { ListTransactionError } from './errors/ListTransactionError'
 
-type Response = Either<ListTransactionError, TransactionResponseDto>
+type Response = Either<
+  ListTransactionError,
+  TransactionResponseDto<TransactionEntityProps>
+>
 
 @Injectable()
 export class ListTransactionUseCase {
@@ -14,7 +18,7 @@ export class ListTransactionUseCase {
 
   async execute(params: PaginateQuery): Promise<Response> {
     const { page, per_page } = params
-    const { data: transactionValue, total } =
+    const { data: transactionValue, meta } =
       await this.transactionRespository.list(params)
 
     if (transactionValue.length === 0) {
@@ -32,7 +36,7 @@ export class ListTransactionUseCase {
       meta: {
         currentPage: Number(page),
         perPage: Number(per_page),
-        total
+        total: meta.total
       }
     }
 
