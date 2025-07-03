@@ -5,6 +5,7 @@ import {
   Injectable
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { Request } from 'express'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -18,12 +19,25 @@ export class RolesGuard implements CanActivate {
 
     if (!requiredRoles) return true
 
-    const { user } = context.switchToHttp().getRequest()
+    const request: Request = context.switchToHttp().getRequest()
+    const token = request.headers.authorization?.split(' ')[1]
 
-    if (!user || !user.roles) {
-      throw new ForbiddenException('User does not have roles')
+    if (process.env.AUTH_DISABLED === 'true' && !token) {
+      return true
     }
 
-    return requiredRoles.some(role => user.roles.includes(role))
+    if (!request.user || !request.user.roles) {
+      throw new ForbiddenException('User does not have access')
+    }
+
+    const isTheSameRole = requiredRoles.some(role =>
+      request.user?.roles.includes(role)
+    )
+
+    if (!isTheSameRole) {
+      throw new ForbiddenException('User does not have access')
+    }
+
+    return true
   }
 }

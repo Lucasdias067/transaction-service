@@ -6,7 +6,8 @@ export abstract class TransactionRepository {
   abstract create(transaction: Transaction): Promise<Transaction>
   abstract createMany(transaction: Transaction): Promise<Transaction[]>
   abstract list(
-    params: PaginateQuery
+    params: PaginateQuery,
+    options?: { id: string }
   ): Promise<TransactionResponseDto<Transaction>>
   // abstract findById(id: string): Promise<Transaction | null>;
   // abstract save(id: string, transaction: Partial<Transaction>): Promise<Transaction>;

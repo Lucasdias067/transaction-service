@@ -53,8 +53,6 @@ export class PrismaTransactionRepository implements TransactionRepository {
       PrismaTransactionMapper.toPersistence
     )
 
-    console.log(prismaData)
-
     await this.prismaService.transaction.createMany({
       data: prismaData
     })
@@ -72,19 +70,36 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   async list(
-    params: PaginateQuery
+    params: PaginateQuery,
+    options?: { id: string }
   ): Promise<TransactionResponseDto<Transaction>> {
     const page = Number(params.page) ?? 1
     const per_page = Number(params.per_page) ?? 10
+    const userId = options?.id
 
     const skip = (page - 1) * per_page
 
     const prismaTransaction = await this.prismaService.transaction.findMany({
+      where: {
+        ...(userId === '1'
+          ? {}
+          : {
+              userId
+            })
+      },
       skip,
       take: per_page
     })
 
-    const totalTransactions = await this.prismaService.transaction.count()
+    const totalTransactions = await this.prismaService.transaction.count({
+      where: {
+        ...(userId === '1'
+          ? {}
+          : {
+              userId
+            })
+      }
+    })
 
     const data = prismaTransaction.map(PrismaTransactionMapper.toEntity)
 

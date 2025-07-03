@@ -13,7 +13,7 @@ type Response = Either<
 
 @Injectable()
 export class CreateTransactionUseCase {
-  constructor(private transactionRespository: TransactionRepository) {}
+  constructor(private transactionRepository: TransactionRepository) {}
 
   async execute(
     transaction: TransactionRequestDto,
@@ -39,7 +39,7 @@ export class CreateTransactionUseCase {
       )
 
       const transactionValues =
-        await this.transactionRespository.createMany(transactionDomain)
+        await this.transactionRepository.createMany(transactionDomain)
 
       const transactionValuesMapped = transactionValues.map(transactionValue =>
         TransactionMapper.toHTTP(transactionValue)
@@ -48,7 +48,7 @@ export class CreateTransactionUseCase {
       return right(transactionValuesMapped)
     }
 
-    const transactionValue = await this.transactionRespository.create(
+    const transactionValue = await this.transactionRepository.create(
       TransactionMapper.toEntity(transaction, userId)
     )
 

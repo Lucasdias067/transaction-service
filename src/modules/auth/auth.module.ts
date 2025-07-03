@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModules } from 'src/infra/auth/jwt.module'
-import { JwtStrategy } from 'src/infra/auth/jwt.strategy'
+import { JwtStrategy } from 'src/infra/auth/jwt.strategy.service'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { RolesGuard } from 'src/infra/auth/roles.guard'
 import { UserRepository } from '../users/domain/repositories/user.repository'

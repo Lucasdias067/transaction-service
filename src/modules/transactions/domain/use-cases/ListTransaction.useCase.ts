@@ -14,12 +14,15 @@ type Response = Either<
 
 @Injectable()
 export class ListTransactionUseCase {
-  constructor(private transactionRespository: TransactionRepository) {}
+  constructor(private transactionRepository: TransactionRepository) {}
 
-  async execute(params: PaginateQuery): Promise<Response> {
+  async execute(
+    params: PaginateQuery,
+    options?: { id: string }
+  ): Promise<Response> {
     const { page, per_page } = params
     const { data: transactionValue, meta } =
-      await this.transactionRespository.list(params)
+      await this.transactionRepository.list(params, options)
 
     if (transactionValue.length === 0) {
       return left(new ListTransactionError('No transactions found'))

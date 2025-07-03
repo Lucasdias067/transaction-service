@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { CreateUserUseCase } from 'src/modules/users/domain/use-cases/createUserUseCase'
 import { UserRequestDto } from '../dtos/user.dto'
 
@@ -15,7 +16,10 @@ export class UserController {
 
       return result.value
     } catch (error) {
-      throw new BadRequestException(error)
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException(error)
+      }
+      throw error.message
     }
   }
 }

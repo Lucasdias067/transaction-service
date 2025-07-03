@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common'
 import { JsonWebTokenError, TokenExpiredError } from '@nestjs/jwt'
 import { AuthGuard } from '@nestjs/passport'
+import { Request } from 'express'
 import { Observable } from 'rxjs'
 
 @Injectable()
@@ -12,7 +13,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
-    if (process.env.AUTH_DISABLED === 'true') {
+    const request: Request = context.switchToHttp().getRequest()
+    const token = request.headers.authorization?.split(' ')[1]
+
+    if (process.env.AUTH_DISABLED === 'true' && !token) {
       return true
     }
 

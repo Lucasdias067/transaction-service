@@ -27,12 +27,10 @@ export class TransactionController {
 
   @Post()
   async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
-    const userId = request.user?.sub
-
-    console.log(userId)
+    const userId = request.user?.sub as string
 
     try {
-      const result = await this.createTransactionUseCase.execute(body,'1')
+      const result = await this.createTransactionUseCase.execute(body, userId)
 
       if (result.isLeft()) throw result.value
 
@@ -46,9 +44,13 @@ export class TransactionController {
   }
 
   @Get()
-  async list(@Query() params: PaginateQuery) {
+  async list(@Query() params: PaginateQuery, @Req() request: Request) {
+    const userId = request.user?.sub
+
+    const id = userId ?? '1'
+
     try {
-      const result = await this.listTransactionUseCase.execute(params)
+      const result = await this.listTransactionUseCase.execute(params, { id })
 
       if (result.isLeft()) throw result.value
 

@@ -15,8 +15,7 @@ export class AuthController {
 
       return result.value
     } catch (error) {
-      console.log(error)
-      return error
+      throw error.message
     }
   }
 }
