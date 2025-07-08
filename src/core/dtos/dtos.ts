@@ -1,6 +1,7 @@
 export interface PaginateQuery {
   page?: string
   per_page?: string
+  date?: Date
 }
 
 export interface PaginatedResponse {

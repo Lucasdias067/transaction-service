@@ -73,8 +73,22 @@ export class PrismaTransactionRepository implements TransactionRepository {
     params: PaginateQuery,
     options?: { id: string }
   ): Promise<TransactionResponseDto<Transaction>> {
-    const page = Number(params.page) ?? 1
-    const per_page = Number(params.per_page) ?? 10
+    const page = Number(params.page)
+    const per_page = Number(params.per_page)
+
+    let dateFilter = {}
+    if (params.date) {
+      const date = new Date(params.date)
+      const start = new Date(date.getFullYear(), date.getMonth(), 1)
+      const end = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+      dateFilter = {
+        createdAt: {
+          gte: start,
+          lt: end
+        }
+      }
+    }
+
     const userId = options?.id
 
     const skip = (page - 1) * per_page
@@ -85,7 +99,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
           ? {}
           : {
               userId
-            })
+            }),
+        ...dateFilter
       },
       skip,
       take: per_page
