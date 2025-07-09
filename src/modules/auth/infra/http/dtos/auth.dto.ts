@@ -14,3 +14,11 @@ export class UserLoginRequestDto {
   )
   password: string
 }
+
+export class UserLoginResponseDto {
+  id: string
+  name: string
+  email: string
+  role: Role
+  access_token: string
+}

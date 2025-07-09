@@ -3,9 +3,12 @@ import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { Either, left, right } from 'src/core/logic/Either'
 import { UserRepository } from 'src/modules/users/domain/repositories/user.repository'
-import { UserLoginRequestDto } from '../../infra/http/dtos/auth.dto'
+import {
+  UserLoginRequestDto,
+  UserLoginResponseDto
+} from '../../infra/http/dtos/auth.dto'
 
-type Response = Either<Error, { access_token: string }>
+type Response = Either<Error, UserLoginResponseDto>
 
 @Injectable()
 export class LoginUserUseCase {
@@ -35,6 +38,14 @@ export class LoginUserUseCase {
 
     const token = await this.jwtService.signAsync(payload)
 
-    return right({ access_token: `Bearer ${token}` })
+    const userData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      access_token: `Bearer ${token}`
+    }
+
+    return right(userData)
   }
 }
