@@ -21,6 +21,7 @@ export class UserMapper {
     const userResponse = {
       id: user.id,
       name: user.name,
+      password: user.password,
       email: user.email,
       role: user.role
     }

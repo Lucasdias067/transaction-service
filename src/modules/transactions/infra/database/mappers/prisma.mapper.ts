@@ -1,14 +1,14 @@
 import { Prisma } from '@prisma/client'
 import {
-  Transaction,
+  TransactionEntity,
   TransactionEntityProps
 } from 'src/modules/transactions/domain/entities/transaction.entity'
 
 export class PrismaTransactionMapper {
   static toEntity(
     prismaTransaction: Prisma.TransactionGetPayload<{}>
-  ): Transaction {
-    const transactionDomain = Transaction.create({
+  ): TransactionEntity {
+    const transactionDomain = TransactionEntity.createFromPersistence({
       id: prismaTransaction.id,
       title: prismaTransaction.title,
       amount: prismaTransaction.amount,
@@ -25,7 +25,7 @@ export class PrismaTransactionMapper {
     return transactionDomain
   }
 
-  static toPersistence(transaction: Transaction): TransactionEntityProps {
+  static toPersistence(transaction: TransactionEntity): TransactionEntityProps {
     return {
       id: transaction.id,
       title: transaction.title,

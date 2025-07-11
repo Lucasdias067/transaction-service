@@ -6,9 +6,8 @@ import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { JwtModules } from 'src/infra/auth/jwt.module'
 import { JwtStrategy } from 'src/infra/auth/jwt.strategy.service'
 import { RolesGuard } from 'src/infra/auth/roles.guard'
-import { UserRepository } from '../users/domain/repositories/user.repository'
-import { PrismaUserRepository } from '../users/infra/database/repositories/prisma.user.repository'
-import { LoginUserUseCase } from './domain/use-cases/loginUserUseCase'
+import { UserModule } from '../users/user.module'
+import { LoginUserUseCase } from './domain/use-cases/loginUser.UseCase'
 import { AuthController } from './infra/http/controller/auth.controller'
 
 @Module({
@@ -17,19 +16,11 @@ import { AuthController } from './infra/http/controller/auth.controller'
       isGlobal: true
     }),
     JwtModules.forRoot(),
-    PassportModule
+    PassportModule,
+    UserModule
   ],
   controllers: [AuthController],
-  providers: [
-    {
-      provide: UserRepository,
-      useClass: PrismaUserRepository
-    },
-    LoginUserUseCase,
-    JwtStrategy,
-    JwtAuthGuard,
-    RolesGuard
-  ],
+  providers: [LoginUserUseCase, JwtStrategy, JwtAuthGuard, RolesGuard],
   exports: [JwtModules.forRoot()]
 })
 export class AuthModule {}

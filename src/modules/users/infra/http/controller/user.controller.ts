@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { CreateUserUseCase } from 'src/modules/users/domain/use-cases/createUserUseCase'
+import { CreateUserUseCase } from 'src/modules/users/domain/use-cases/createUser.UseCase'
 import { UserRequestDto } from '../dtos/user.dto'
 
 @Controller('/auth')

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { UserRepository } from './domain/repositories/user.repository'
-import { CreateUserUseCase } from './domain/use-cases/createUserUseCase'
-import { FindByEmailUserUseCase } from './domain/use-cases/findByEmailUseCase'
+import { CreateUserUseCase } from './domain/use-cases/createUser.UseCase'
+import { FindByEmailWithPasswordUseCase } from './domain/use-cases/findByEmailWithPassword.UseCase'
 import { PrismaUserRepository } from './infra/database/repositories/prisma.user.repository'
 import { UserController } from './infra/http/controller/user.controller'
 
@@ -14,7 +14,8 @@ import { UserController } from './infra/http/controller/user.controller'
       useClass: PrismaUserRepository
     },
     CreateUserUseCase,
-    FindByEmailUserUseCase
-  ]
+    FindByEmailWithPasswordUseCase
+  ],
+  exports: [FindByEmailWithPasswordUseCase]
 })
 export class UserModule {}

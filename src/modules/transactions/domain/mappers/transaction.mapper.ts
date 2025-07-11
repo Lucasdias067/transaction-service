@@ -1,6 +1,6 @@
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 import {
-  Transaction,
+  TransactionEntity,
   TransactionEntityProps
 } from '../entities/transaction.entity'
 
@@ -8,12 +8,15 @@ export class TransactionMapper {
   static toEntity(
     transaction: TransactionRequestDto,
     userId: string
-  ): Transaction {
-    const transactionDomain = Transaction.create({ ...transaction, userId })
+  ): TransactionEntity {
+    const transactionDomain = TransactionEntity.createFromDTO({
+      ...transaction,
+      userId
+    })
     return transactionDomain
   }
 
-  static toHTTP(transaction: Transaction): TransactionEntityProps {
+  static toHTTP(transaction: TransactionEntity): TransactionEntityProps {
     return {
       id: transaction.id,
       title: transaction.title,

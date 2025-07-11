@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 
-type TransactionType = 'INCOME' | 'EXPENSE'
-type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED'
+export type TransactionType = 'INCOME' | 'EXPENSE'
+export type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED'
 
 export interface TransactionEntityProps {
   id: string
@@ -19,7 +19,7 @@ export interface TransactionEntityProps {
   updatedAt: Date
 }
 
-export class Transaction implements TransactionEntityProps {
+export class TransactionEntity implements TransactionEntityProps {
   private props: TransactionEntityProps
 
   constructor(props: TransactionEntityProps) {
@@ -74,28 +74,33 @@ export class Transaction implements TransactionEntityProps {
     return this.props.updatedAt
   }
 
-  set updateAt(date: Date) {
+  set updatedAt(date: Date) {
     this.props.updatedAt = date
   }
 
-  static create(
-    transaction:
-      | (TransactionRequestDto & { userId: string })
-      | TransactionEntityProps
-  ): Transaction {
-    return new Transaction({
-      id: 'id' in transaction ? transaction.id : randomUUID(),
-      title: transaction.title,
-      amount: transaction.amount,
-      type: transaction.type,
-      userId: transaction.userId,
-      categoryId: transaction.categoryId,
-      status: transaction.status ?? 'PENDING',
-      installmentNumber: transaction.installmentNumber ?? 1,
-      totalInstallments: transaction.totalInstallments ?? 1,
-      installmentGroupId: transaction.installmentGroupId,
-      createdAt: transaction.createdAt,
-      updatedAt: 'updatedAt' in transaction ? transaction.updatedAt : new Date()
+  static createFromDTO(
+    dto: TransactionRequestDto & { userId: string }
+  ): TransactionEntity {
+    const now = new Date()
+    return new TransactionEntity({
+      id: randomUUID(),
+      title: dto.title,
+      amount: dto.amount,
+      type: dto.type,
+      userId: dto.userId,
+      categoryId: dto.categoryId,
+      status: dto.status ?? 'PENDING',
+      installmentNumber: dto.installmentNumber ?? 1,
+      totalInstallments: dto.totalInstallments ?? 1,
+      installmentGroupId: dto.installmentGroupId,
+      createdAt: dto.createdAt ?? now,
+      updatedAt: now
     })
+  }
+
+  static createFromPersistence(
+    data: TransactionEntityProps
+  ): TransactionEntity {
+    return new TransactionEntity(data)
   }
 }

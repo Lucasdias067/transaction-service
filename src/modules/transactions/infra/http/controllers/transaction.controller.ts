@@ -11,10 +11,10 @@ import {
 import { Request } from 'express'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
-import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
+import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'
 import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
 import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
-import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
+import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/listTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
 @Controller('/transactions')

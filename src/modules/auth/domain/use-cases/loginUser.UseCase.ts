@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { Either, left, right } from 'src/core/logic/Either'
-import { UserRepository } from 'src/modules/users/domain/repositories/user.repository'
+import { FindByEmailWithPasswordUseCase } from 'src/modules/users/domain/use-cases/findByEmailWithPassword.UseCase'
 import {
   UserLoginRequestDto,
   UserLoginResponseDto
@@ -13,16 +13,20 @@ type Response = Either<Error, UserLoginResponseDto>
 @Injectable()
 export class LoginUserUseCase {
   constructor(
-    private userRepository: UserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private findByEmailWithPasswordUseCase: FindByEmailWithPasswordUseCase
   ) {}
 
   async execute(data: UserLoginRequestDto): Promise<Response> {
-    const user = await this.userRepository.findByEmail(data.email)
+    const userOrError = await this.findByEmailWithPasswordUseCase.execute(
+      data.email
+    )
 
-    if (!user) {
-      return left(new BadRequestException('User with that email not exists'))
+    if (userOrError.isLeft()) {
+      return left(userOrError.value)
     }
+
+    const user = userOrError.value
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password)
 

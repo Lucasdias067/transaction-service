@@ -1,4 +1,4 @@
-interface UsersEntityProps {
+export interface UsersEntityProps {
   id: string
   name: string
   email: string
@@ -6,7 +6,7 @@ interface UsersEntityProps {
   role: Role
 }
 
-export class UserEntity {
+export class UserEntity implements UsersEntityProps {
   private props: UsersEntityProps
 
   constructor(props: UsersEntityProps) {

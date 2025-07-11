@@ -1,14 +1,15 @@
+import { TransactionStatus, TransactionType } from '@prisma/client'
 import { PaginatedResponse } from 'src/core/dtos/dtos'
 
 export interface TransactionRequestDto {
   title: string
   amount: number
-  type: 'INCOME' | 'EXPENSE'
+  type: TransactionType
   categoryId: string
-  status: 'PENDING' | 'PAID'
+  status: TransactionStatus
   installmentNumber?: number
   totalInstallments?: number
-  installmentGroupId: undefined
+  installmentGroupId: string | undefined
   createdAt: Date
 }
 
