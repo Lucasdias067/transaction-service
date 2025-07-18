@@ -33,6 +33,8 @@ export class CategoryController {
     try {
       const userId = request.user?.sub as string
 
+      console.log(request.user)
+
       const result = await this.listCategoryUseCase.execute(userId)
 
       if (result.isLeft()) throw result.value

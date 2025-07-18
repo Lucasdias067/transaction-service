@@ -4,7 +4,7 @@ export interface CategoryEntityProps {
   id: string
   name: string
   type: TransactionType
-  userId: string
+  userId?: string
 }
 
 export class CategoryEntity implements CategoryEntityProps {
@@ -31,7 +31,7 @@ export class CategoryEntity implements CategoryEntityProps {
     return this.props.type
   }
 
-  get userId(): string {
+  get userId(): string | undefined {
     return this.props.userId
   }
 }

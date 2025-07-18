@@ -44,12 +44,12 @@ export class TransactionController {
 
   @Get()
   async list(@Query() params: PaginateQuery, @Req() request: Request) {
-    const userId = request.user?.sub
-
-    const id = userId ?? '1'
+    const userId = request.user?.sub as string
 
     try {
-      const result = await this.listTransactionUseCase.execute(params, { id })
+      const result = await this.listTransactionUseCase.execute(params, {
+        id: userId
+      })
 
       if (result.isLeft()) throw result.value
 

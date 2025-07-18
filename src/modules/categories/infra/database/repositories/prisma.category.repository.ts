@@ -22,8 +22,9 @@ export class PrismaCategoryRepository implements CategoryRepository {
   async list(userId: string): Promise<CategoryResponseDto<CategoryEntity>> {
     const listCategories = await this.prismaService.category.findMany({
       where: {
-        ...(userId && { userId })
-      }
+        OR: [{ userId: null }, { userId }]
+      },
+      orderBy: { name: 'asc' }
     })
 
     const result = {
