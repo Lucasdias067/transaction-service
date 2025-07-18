@@ -13,9 +13,9 @@ const prismaProvider = {
 export class PrismaModule {
   static forRoot(): DynamicModule {
     return {
+      module: PrismaModule,
       providers: [prismaProvider],
       exports: [prismaProvider],
-      module: PrismaModule
     }
   }
 }
