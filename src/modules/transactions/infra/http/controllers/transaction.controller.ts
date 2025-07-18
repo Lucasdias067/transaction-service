@@ -12,8 +12,8 @@ import { Request } from 'express'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
-import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'
-import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/listTransaction.useCase'
+import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
+import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
 @Controller('/transactions')
