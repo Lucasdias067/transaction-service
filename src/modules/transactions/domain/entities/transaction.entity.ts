@@ -1,8 +1,6 @@
 import { randomUUID } from 'node:crypto'
+import { TransactionStatus, TransactionType } from 'src/core/dtos/dtos'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
-
-export type TransactionType = 'INCOME' | 'EXPENSE'
-export type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED'
 
 export interface TransactionEntityProps {
   id: string

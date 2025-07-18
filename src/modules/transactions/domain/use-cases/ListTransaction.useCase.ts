@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { PaginateQuery } from 'src/core/dtos/dtos'
+import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionEntityProps } from '../entities/transaction.entity'
 import { TransactionMapper } from '../mappers/transaction.mapper'
 import { TransactionRepository } from '../repositories/transaction.repository'
-import { ListTransactionError } from './errors/ListTransactionError'
 
 type Response = Either<
-  ListTransactionError,
+  UseCaseError,
   TransactionResponseDto<TransactionEntityProps>
 >
 
@@ -25,13 +25,13 @@ export class ListTransactionUseCase {
       await this.transactionRepository.list(params, options)
 
     if (transactionValue.length === 0) {
-      return left(new ListTransactionError('No transactions found'))
+      return left(new UseCaseError('No transactions found'))
     }
 
     const transactions = transactionValue.map(TransactionMapper.toHTTP)
 
     if (!transactions) {
-      return left(new ListTransactionError('Error validating transactions'))
+      return left(new UseCaseError('Error validating transactions'))
     }
 
     const result = {

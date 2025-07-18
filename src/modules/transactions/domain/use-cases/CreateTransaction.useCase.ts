@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
+import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionEntityProps } from '../entities/transaction.entity'
 import { TransactionMapper } from '../mappers/transaction.mapper'
 import { TransactionRepository } from '../repositories/transaction.repository'
-import { CreateTransactionError } from './errors/CreateTransactionError'
 
 type Response = Either<
-  CreateTransactionError,
+  UseCaseError,
   TransactionEntityProps | TransactionEntityProps[]
 >
 
@@ -20,9 +20,15 @@ export class CreateTransactionUseCase {
     userId: string
   ): Promise<Response> {
     if (transaction.amount <= 0) {
-      return left(
-        new CreateTransactionError('Amount must be greater than zero')
-      )
+      return left(new UseCaseError('Amount must be greater than zero'))
+    }
+
+    if (transaction.type === 'EXPENSE' && transaction.status === 'RECEIVED') {
+      throw new Error('EXPENSE transactions cannot have status RECEIVED')
+    }
+
+    if (transaction.type === 'INCOME' && transaction.status === 'PAID') {
+      throw new Error('INCOME transactions cannot have status PAID')
     }
 
     const isInstallmentTransaction =
@@ -48,8 +54,13 @@ export class CreateTransactionUseCase {
       return right(transactionValuesMapped)
     }
 
+    const transactionMapperToEntity = TransactionMapper.toEntity(
+      transaction,
+      userId
+    )
+
     const transactionValue = await this.transactionRepository.create(
-      TransactionMapper.toEntity(transaction, userId)
+      transactionMapperToEntity
     )
 
     return right(TransactionMapper.toHTTP(transactionValue))

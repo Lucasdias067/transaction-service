@@ -1,4 +1,4 @@
-type TransactionType = 'INCOME' | 'EXPENSE'
+import { TransactionType } from 'src/core/dtos/dtos'
 
 export interface CategoryEntityProps {
   id: string

@@ -10,11 +10,10 @@ import {
 } from '@nestjs/common'
 import { Request } from 'express'
 import { PaginateQuery } from 'src/core/dtos/dtos'
+import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
-import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
-import { CreateTransactionError } from 'src/modules/transactions/domain/use-cases/errors/CreateTransactionError'
-import { ListTransactionError } from 'src/modules/transactions/domain/use-cases/errors/ListTransactionError'
-import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
+import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'
+import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/listTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
 @Controller('/transactions')
@@ -36,7 +35,7 @@ export class TransactionController {
 
       return result.value
     } catch (error) {
-      if (error instanceof CreateTransactionError) {
+      if (error instanceof UseCaseError) {
         throw new BadRequestException(error.message)
       }
       throw error.message
@@ -56,7 +55,7 @@ export class TransactionController {
 
       return result.value
     } catch (error) {
-      if (error instanceof ListTransactionError) {
+      if (error instanceof UseCaseError) {
         throw new BadRequestException(error.message)
       }
       throw error.message

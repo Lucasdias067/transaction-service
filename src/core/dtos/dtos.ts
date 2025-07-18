@@ -1,3 +1,6 @@
+export type TransactionType = 'INCOME' | 'EXPENSE'
+export type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED'
+
 export interface PaginateQuery {
   page?: string
   per_page?: string

@@ -1,12 +1,11 @@
-// biome-ignore assist/source/organizeImports: <>
 import { Inject, Injectable } from '@nestjs/common'
-import { randomUUID } from 'node:crypto'
+import { randomUUID } from 'crypto'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { TransactionEntity } from 'src/modules/transactions/domain/entities/transaction.entity'
 import { TransactionRepository } from 'src/modules/transactions/domain/repositories/transaction.repository'
 import { TransactionResponseDto } from '../../http/dtos/transaction.dto'
-import { PrismaTransactionMapper } from '../mappers/prisma.mapper'
+import { PrismaTransactionMapper } from '../mappers/prisma.category.mapper'
 
 @Injectable()
 export class PrismaTransactionRepository implements TransactionRepository {
@@ -46,7 +45,9 @@ export class PrismaTransactionRepository implements TransactionRepository {
         createdAt: installmentDate
       }
 
-      return TransactionEntity.createFromDTO({ ...props, userId })
+      const entityData = TransactionEntity.createFromDTO({ ...props, userId })
+
+      return entityData
     })
 
     const prismaData = transactionInstances.map(
