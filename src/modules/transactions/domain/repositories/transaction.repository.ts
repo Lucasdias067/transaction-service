@@ -9,7 +9,7 @@ export abstract class TransactionRepository {
   ): Promise<TransactionEntity[]>
   abstract list(
     params: PaginateQuery,
-    options?: { id: string }
+    options?: UserPayload
   ): Promise<TransactionResponseDto<TransactionEntity>>
   // abstract findById(id: string): Promise<Transaction | null>;
   // abstract save(id: string, transaction: Partial<Transaction>): Promise<Transaction>;

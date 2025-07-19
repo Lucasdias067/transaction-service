@@ -12,8 +12,8 @@ import { Request } from 'express'
 import { PaginateQuery } from 'src/core/dtos/dtos'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
-import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/CreateTransaction.useCase'
-import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/ListTransaction.useCase'
+import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'
+import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/listTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
 @Controller('/transactions')
@@ -44,12 +44,10 @@ export class TransactionController {
 
   @Get()
   async list(@Query() params: PaginateQuery, @Req() request: Request) {
-    const userId = request.user?.sub as string
+    const options = request.user
 
     try {
-      const result = await this.listTransactionUseCase.execute(params, {
-        id: userId
-      })
+      const result = await this.listTransactionUseCase.execute(params, options)
 
       if (result.isLeft()) throw result.value
 

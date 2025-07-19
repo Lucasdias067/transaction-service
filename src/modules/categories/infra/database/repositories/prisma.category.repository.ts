@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { CategoryEntity } from 'src/modules/categories/domain/entities/category.entity'
 import { CategoryRepository } from 'src/modules/categories/domain/repositories/category.repository'
-import { CategoryResponseDto } from '../../http/dtos/category.dto'
 import { PrismaCategoryMapper } from '../mappers/prisma.category.mapper'
 
 @Injectable()
@@ -19,7 +18,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     return PrismaCategoryMapper.toEntity(newCategory)
   }
 
-  async list(userId: string): Promise<CategoryResponseDto<CategoryEntity>> {
+  async list(userId: string): Promise<CategoryEntity[]> {
     const listCategories = await this.prismaService.category.findMany({
       where: {
         OR: [{ userId: null }, { userId }]
@@ -27,9 +26,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
       orderBy: { name: 'asc' }
     })
 
-    const result = {
-      data: listCategories.map(PrismaCategoryMapper.toEntity)
-    }
+    const result = listCategories.map(PrismaCategoryMapper.toEntity)
 
     return result
   }

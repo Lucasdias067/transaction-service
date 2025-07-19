@@ -18,9 +18,14 @@ export class ListTransactionUseCase {
 
   async execute(
     params: PaginateQuery,
-    options?: { id: string }
+    options?: UserPayload
   ): Promise<Response> {
     const { page, per_page } = params
+
+    if (!options) {
+      return left(new UseCaseError('User required'))
+    }
+
     const { data: transactionValue, meta } =
       await this.transactionRepository.list(params, options)
 

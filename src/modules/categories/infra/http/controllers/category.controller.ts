@@ -15,9 +15,9 @@ export class CategoryController {
 
   @Post()
   async create(@Body() body: CategoryRequestDto, @Req() request: Request) {
-    try {
-      const userId = request.user?.sub as string
+    const userId = request.user?.sub as string
 
+    try {
       const result = await this.createCategoryUseCase.execute(body, userId)
 
       if (result.isLeft()) throw result.value
@@ -30,11 +30,9 @@ export class CategoryController {
 
   @Get()
   async list(@Req() request: Request) {
+    const userId = request.user?.sub as string
+
     try {
-      const userId = request.user?.sub as string
-
-      console.log(request.user)
-
       const result = await this.listCategoryUseCase.execute(userId)
 
       if (result.isLeft()) throw result.value

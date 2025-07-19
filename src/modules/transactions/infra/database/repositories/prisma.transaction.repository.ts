@@ -72,7 +72,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
   async list(
     params: PaginateQuery,
-    options?: { id: string }
+    options?: UserPayload
   ): Promise<TransactionResponseDto<TransactionEntity>> {
     const page = Number(params.page)
     const per_page = Number(params.per_page)
@@ -90,16 +90,14 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }
     }
 
-    const userId = options?.id
-
     const skip = (page - 1) * per_page
 
     const prismaTransaction = await this.prismaService.transaction.findMany({
       where: {
-        ...(userId === '1'
+        ...(options?.roles === 'ADMIN'
           ? {}
           : {
-              userId
+              userId: { equals: options?.sub }
             }),
         ...dateFilter
       },
@@ -109,11 +107,12 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
     const totalTransactions = await this.prismaService.transaction.count({
       where: {
-        ...(userId === '1'
+        ...(options?.roles === 'ADMIN'
           ? {}
           : {
-              userId
-            })
+              userId: { equals: options?.sub }
+            }),
+        ...dateFilter
       }
     })
 

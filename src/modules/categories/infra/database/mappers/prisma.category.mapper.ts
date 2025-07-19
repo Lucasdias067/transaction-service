@@ -12,7 +12,7 @@ export class PrismaCategoryMapper {
       id: prismaCategory.id,
       name: prismaCategory.name,
       type: prismaCategory.type,
-      userId: prismaCategory.userId as string
+      userId: prismaCategory.userId
     })
     return categoryDomain
   }
