@@ -28,35 +28,33 @@ export class TransactionController {
   async create(@Body() body: TransactionRequestDto, @Req() request: Request) {
     const userId = request.user?.sub as string
 
-    try {
-      const result = await this.createTransactionUseCase.execute(body, userId)
+    const result = await this.createTransactionUseCase.execute(body, userId)
 
-      if (result.isLeft()) throw result.value
-
-      return result.value
-    } catch (error) {
+    if (result.isLeft()) {
+      const error = result.value
       if (error instanceof UseCaseError) {
         throw new BadRequestException(error.message)
       }
-      throw error.message
+      throw new BadRequestException(error)
     }
+
+    return result.value
   }
 
   @Get()
   async list(@Query() params: PaginateQuery, @Req() request: Request) {
     const options = request.user
 
-    try {
-      const result = await this.listTransactionUseCase.execute(params, options)
+    const result = await this.listTransactionUseCase.execute(params, options)
 
-      if (result.isLeft()) throw result.value
-
-      return result.value
-    } catch (error) {
+    if (result.isLeft()) {
+      const error = result.value
       if (error instanceof UseCaseError) {
         throw new BadRequestException(error.message)
       }
-      throw error.message
+      throw new BadRequestException(error)
     }
+
+    return result.value
   }
 }

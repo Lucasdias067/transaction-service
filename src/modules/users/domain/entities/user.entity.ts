@@ -4,19 +4,16 @@ export interface UsersEntityProps {
   email: string
   password: string
   role: Role
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export class UserEntity implements UsersEntityProps {
   private props: UsersEntityProps
 
   constructor(props: UsersEntityProps) {
-    this.props = {
-      id: props.id,
-      email: props.email,
-      name: props.name,
-      password: props.password,
-      role: props.role
-    }
+    this.props = { ...props }
   }
 
   get id(): string {
@@ -37,5 +34,17 @@ export class UserEntity implements UsersEntityProps {
 
   get role(): Role {
     return this.props.role
+  }
+
+  get isActive(): boolean {
+    return this.props.isActive
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt
   }
 }

@@ -1,25 +1,7 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
+import { Controller } from '@nestjs/common'
 import { CreateUserUseCase } from 'src/modules/users/domain/use-cases/createUser.UseCase'
-import { UserRequestDto } from '../dtos/user.dto'
 
-@Controller('/auth')
+@Controller('/users')
 export class UserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
-
-  @Post('/sign-up')
-  async register(@Body() data: UserRequestDto) {
-    try {
-      const result = await this.createUserUseCase.execute(data)
-
-      if (result.isLeft()) throw result.value
-
-      return result.value
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new BadRequestException(error)
-      }
-      throw error.message
-    }
-  }
 }

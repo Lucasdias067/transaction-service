@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards
+} from '@nestjs/common'
 import { Request } from 'express'
+import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { CreateCategoryUseCase } from 'src/modules/categories/domain/use-cases/createCategory.useCase'
 import { ListCategoryUseCase } from 'src/modules/categories/domain/use-cases/listCategory.useCase'
@@ -17,29 +26,37 @@ export class CategoryController {
   async create(@Body() body: CategoryRequestDto, @Req() request: Request) {
     const userId = request.user?.sub as string
 
-    try {
-      const result = await this.createCategoryUseCase.execute(body, userId)
+    const result = await this.createCategoryUseCase.execute(body, userId)
 
-      if (result.isLeft()) throw result.value
+    if (result.isLeft()) {
+      const error = result.value
 
-      return result.value
-    } catch (error) {
-      throw error.message
+      if (error instanceof UseCaseError) {
+        throw new BadRequestException(error.message)
+      }
+
+      throw new BadRequestException(error)
     }
+
+    return result.value
   }
 
   @Get()
   async list(@Req() request: Request) {
     const userId = request.user?.sub as string
 
-    try {
-      const result = await this.listCategoryUseCase.execute(userId)
+    const result = await this.listCategoryUseCase.execute(userId)
 
-      if (result.isLeft()) throw result.value
+    if (result.isLeft()) {
+      const error = result.value
 
-      return result.value
-    } catch (error) {
-      throw error.message
+      if (error instanceof UseCaseError) {
+        throw new BadRequestException(error.message)
+      }
+
+      throw new BadRequestException(error)
     }
+
+    return result.value
   }
 }

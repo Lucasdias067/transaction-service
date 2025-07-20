@@ -26,11 +26,14 @@ export class PrismaTransactionRepository implements TransactionRepository {
     const totalOfInstallments = transaction.totalInstallments ?? 1
     const installmentGroupId = randomUUID()
     const userId = transaction.userId
+    const baseDate =
+      transaction.EffectiveDate ?? transaction.dueDate ?? new Date()
 
     const transactionInstances = Array.from({
       length: totalOfInstallments
     }).map((_, i) => {
-      const installmentDate = new Date(transaction.createdAt)
+      // Para parcelamento, cada parcela tem datas incrementais (mensais)
+      const installmentDate = new Date(baseDate)
       installmentDate.setMonth(installmentDate.getMonth() + i)
 
       const props = {
@@ -42,7 +45,9 @@ export class PrismaTransactionRepository implements TransactionRepository {
         installmentNumber: i + 1,
         totalInstallments: totalOfInstallments,
         installmentGroupId,
-        createdAt: installmentDate
+        dueDate: installmentDate, 
+        EffectiveDate: transaction.EffectiveDate,
+        paidAt: transaction.paidAt
       }
 
       const entityData = TransactionEntity.createFromDTO({ ...props, userId })
@@ -82,11 +87,45 @@ export class PrismaTransactionRepository implements TransactionRepository {
       const date = new Date(params.date)
       const start = new Date(date.getFullYear(), date.getMonth(), 1)
       const end = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+
       dateFilter = {
         createdAt: {
           gte: start,
           lt: end
         }
+      }
+      dateFilter = {
+        OR: [
+          {
+            EfectiveDate: {
+              gte: start,
+              lt: end
+            }
+          },
+          {
+            AND: [
+              { EfectiveDate: null },
+              {
+                dueDate: {
+                  gte: start,
+                  lt: end
+                }
+              }
+            ]
+          },
+          {
+            AND: [
+              { EfectiveDate: null },
+              { dueDate: null },
+              {
+                createdAt: {
+                  gte: start,
+                  lt: end
+                }
+              }
+            ]
+          }
+        ]
       }
     }
 

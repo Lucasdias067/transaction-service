@@ -12,7 +12,10 @@ export class UserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
-      role: user.role
+      role: user.role,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     })
     return userEntity
   }
@@ -21,9 +24,11 @@ export class UserMapper {
     const userResponse = {
       id: user.id,
       name: user.name,
-      password: user.password,
       email: user.email,
-      role: user.role
+      role: user.role,
+      isActive: true,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     }
 
     return userResponse

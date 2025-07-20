@@ -6,19 +6,19 @@ import { CategoryEntityProps } from '../entities/category.entity'
 import { CategoryMapper } from '../mappers/category.mapper'
 import { CategoryRepository } from '../repositories/category.repository'
 
-type Response = Either<Error, CategoryResponseDto<CategoryEntityProps>>
+type Response = Either<UseCaseError, CategoryResponseDto<CategoryEntityProps>>
 
 @Injectable()
 export class ListCategoryUseCase {
   constructor(private categoryRepository: CategoryRepository) {}
 
   async execute(userId: string): Promise<Response> {
-    if (!userId) return left(new Error('Usuário sem ID'))
+    if (!userId) return left(new UseCaseError('User does not have ID'))
 
     const category = await this.categoryRepository.list(userId)
 
     if (!category) {
-      return left(new UseCaseError('No category'))
+      return left(new UseCaseError('No category found'))
     }
 
     const result = {

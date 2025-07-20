@@ -1,5 +1,5 @@
 export type TransactionType = 'INCOME' | 'EXPENSE'
-export type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED'
+export type TransactionStatus = 'PENDING' | 'PAID' | 'RECEIVED' | 'CANCELED' | 'OVERDUE'
 
 export interface PaginateQuery {
   page?: string

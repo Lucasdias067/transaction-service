@@ -3,6 +3,7 @@ import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { UserEntity } from 'src/modules/users/domain/entities/user.entity'
 import { UserRepository } from 'src/modules/users/domain/repositories/user.repository'
 import { PrismaUserMapper } from '../mappers/prisma.user.mapper'
+
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
   constructor(
@@ -19,22 +20,30 @@ export class PrismaUserRepository implements UserRepository {
     return PrismaUserMapper.toDomain(newUser)
   }
 
-  async findByEmail(email: string): Promise<UserEntity> {
-    const findUser = await this.prismaService.user.findUniqueOrThrow({
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const findUser = await this.prismaService.user.findUnique({
       where: {
         email
       }
     })
 
+    if (!findUser) {
+      return null
+    }
+
     return PrismaUserMapper.toDomain(findUser)
   }
 
-  async findById(id: string): Promise<UserEntity> {
+  async findById(id: string): Promise<UserEntity | null> {
     const findUser = await this.prismaService.user.findUniqueOrThrow({
       where: {
         id
       }
     })
+
+    if (!findUser) {
+      return null
+    }
 
     return PrismaUserMapper.toDomain(findUser)
   }

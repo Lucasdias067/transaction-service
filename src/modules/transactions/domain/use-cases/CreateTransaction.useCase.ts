@@ -24,11 +24,15 @@ export class CreateTransactionUseCase {
     }
 
     if (transaction.type === 'EXPENSE' && transaction.status === 'RECEIVED') {
-      throw new Error('EXPENSE transactions cannot have status RECEIVED')
+      return left(
+        new UseCaseError('EXPENSE transactions cannot have status RECEIVED')
+      )
     }
 
     if (transaction.type === 'INCOME' && transaction.status === 'PAID') {
-      throw new Error('INCOME transactions cannot have status PAID')
+      return left(
+        new UseCaseError('INCOME transactions cannot have status PAID')
+      )
     }
 
     const isInstallmentTransaction =
@@ -47,6 +51,10 @@ export class CreateTransactionUseCase {
       const transactionValues =
         await this.transactionRepository.createMany(transactionDomain)
 
+      if (!transactionValues) {
+        return left(new UseCaseError('Error on creating installments'))
+      }
+
       const transactionValuesMapped = transactionValues.map(transactionValue =>
         TransactionMapper.toHTTP(transactionValue)
       )
@@ -62,6 +70,10 @@ export class CreateTransactionUseCase {
     const transactionValue = await this.transactionRepository.create(
       transactionMapperToEntity
     )
+
+    if (!transactionValue) {
+      return left(new UseCaseError('Error on creating transactions'))
+    }
 
     return right(TransactionMapper.toHTTP(transactionValue))
   }

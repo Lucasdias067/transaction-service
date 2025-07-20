@@ -13,6 +13,9 @@ export interface TransactionEntityProps {
   installmentNumber?: number
   totalInstallments?: number
   installmentGroupId?: string
+  dueDate?: Date
+  paidAt?: Date
+  EffectiveDate: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -64,6 +67,18 @@ export class TransactionEntity implements TransactionEntityProps {
     return this.props.installmentGroupId
   }
 
+  get dueDate(): Date | undefined {
+    return this.props.dueDate
+  }
+
+  get paidAt(): Date | undefined {
+    return this.props.paidAt
+  }
+
+  get EffectiveDate(): Date {
+    return this.props.EffectiveDate
+  }
+
   get createdAt(): Date {
     return this.props.createdAt
   }
@@ -87,11 +102,14 @@ export class TransactionEntity implements TransactionEntityProps {
       type: dto.type,
       userId: dto.userId,
       categoryId: dto.categoryId,
-      status: dto.status ?? 'PENDING',
+      status: dto.status,
       installmentNumber: dto.installmentNumber ?? 1,
       totalInstallments: dto.totalInstallments ?? 1,
       installmentGroupId: dto.installmentGroupId,
-      createdAt: dto.createdAt ?? now,
+      dueDate: dto.dueDate,
+      paidAt: dto.paidAt,
+      EffectiveDate: dto.EffectiveDate,
+      createdAt: now,
       updatedAt: now
     })
   }

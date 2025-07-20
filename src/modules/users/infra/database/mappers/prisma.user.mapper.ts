@@ -8,7 +8,10 @@ export class PrismaUserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
-      role: user.role
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     })
     return userEntity
   }
@@ -19,7 +22,10 @@ export class PrismaUserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
-      role: user.role
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     }
 
     return userPersistence

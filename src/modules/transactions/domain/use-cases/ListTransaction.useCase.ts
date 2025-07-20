@@ -29,10 +29,6 @@ export class ListTransactionUseCase {
     const { data: transactionValue, meta } =
       await this.transactionRepository.list(params, options)
 
-    if (transactionValue.length === 0) {
-      return left(new UseCaseError('No transactions found'))
-    }
-
     const transactions = transactionValue.map(TransactionMapper.toHTTP)
 
     if (!transactions) {

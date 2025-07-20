@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import * as bcrypt from 'bcrypt'
+import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
-import { FindByEmailWithPasswordUseCase } from 'src/modules/users/domain/use-cases/findByEmailWithPassword.UseCase'
+import { PasswordHasherRepository } from 'src/infra/bcrypt/passwordHasher.repository'
+import { findUserByEmailUseCase } from 'src/modules/users/domain/use-cases/findUserByEmail.UseCase'
 import {
   UserLoginRequestDto,
   UserLoginResponseDto
@@ -13,25 +14,28 @@ type Response = Either<Error, UserLoginResponseDto>
 @Injectable()
 export class LoginUserUseCase {
   constructor(
-    private readonly jwtService: JwtService,
-    private findByEmailWithPasswordUseCase: FindByEmailWithPasswordUseCase
+    @Inject('bcryptService')
+    private hashService: PasswordHasherRepository,
+    private jwtService: JwtService,
+    private findUserByEmailUseCase: findUserByEmailUseCase
   ) {}
 
   async execute(data: UserLoginRequestDto): Promise<Response> {
-    const userOrError = await this.findByEmailWithPasswordUseCase.execute(
-      data.email
-    )
+    const findUserEmail = await this.findUserByEmailUseCase.execute(data.email)
 
-    if (userOrError.isLeft()) {
-      return left(userOrError.value)
+    if (findUserEmail.isLeft()) {
+      return left(findUserEmail.value)
     }
 
-    const user = userOrError.value
+    const user = findUserEmail.value
 
-    const isPasswordValid = await bcrypt.compare(data.password, user.password)
+    const isPasswordValid = await this.hashService.compare(
+      data.password,
+      user.password
+    )
 
     if (!isPasswordValid) {
-      return left(new BadRequestException('Credentials is not valid'))
+      return left(new UseCaseError('Credentials is not valid'))
     }
 
     const payload: UserPayload = {
