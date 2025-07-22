@@ -9,7 +9,6 @@ export interface TransactionRequestDto {
   status: TransactionStatus
   installmentNumber?: number
   totalInstallments?: number
-  installmentGroupId?: string
   dueDate?: Date 
   paidAt?: Date 
   EffectiveDate: Date 
