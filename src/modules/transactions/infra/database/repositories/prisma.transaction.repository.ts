@@ -15,7 +15,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
   async create(transaction: TransactionEntity): Promise<TransactionEntity> {
     const prismaTransaction = await this.prismaService.transaction.create({
-      data: PrismaTransactionMapper.toPersistence(transaction)
+      data: PrismaTransactionMapper.toPersistence(transaction),
+      include: {
+        category: { select: { name: true } }
+      }
     })
     return PrismaTransactionMapper.toEntity(prismaTransaction)
   }
@@ -27,7 +30,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
     const installmentGroupId = randomUUID()
     const userId = transaction.userId
     const baseDate =
-      transaction.EffectiveDate ?? transaction.dueDate ?? new Date()
+      transaction.effectiveDate ?? transaction.dueDate ?? new Date()
 
     const transactionInstances = Array.from({
       length: totalOfInstallments
@@ -45,8 +48,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
         installmentNumber: i + 1,
         totalInstallments: totalOfInstallments,
         installmentGroupId,
-        dueDate: installmentDate, 
-        EffectiveDate: transaction.EffectiveDate,
+        dueDate: installmentDate,
+        effectiveDate: transaction.effectiveDate,
         paidAt: transaction.paidAt
       }
 
@@ -82,63 +85,26 @@ export class PrismaTransactionRepository implements TransactionRepository {
     const page = Number(params.page)
     const per_page = Number(params.per_page)
 
-    let dateFilter = {}
-    if (params.date) {
-      const date = new Date(params.date)
-      const start = new Date(date.getFullYear(), date.getMonth(), 1)
-      const end = new Date(date.getFullYear(), date.getMonth() + 1, 1)
-
-      dateFilter = {
-        createdAt: {
-          gte: start,
-          lt: end
-        }
-      }
-      dateFilter = {
-        OR: [
-          {
-            EfectiveDate: {
-              gte: start,
-              lt: end
-            }
-          },
-          {
-            AND: [
-              { EfectiveDate: null },
-              {
-                dueDate: {
-                  gte: start,
-                  lt: end
-                }
-              }
-            ]
-          },
-          {
-            AND: [
-              { EfectiveDate: null },
-              { dueDate: null },
-              {
-                createdAt: {
-                  gte: start,
-                  lt: end
-                }
-              }
-            ]
-          }
-        ]
-      }
-    }
+    const date = new Date(params.date as Date)
+    const start = new Date(date.getFullYear(), date.getMonth(), 1)
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 1)
 
     const skip = (page - 1) * per_page
 
     const prismaTransaction = await this.prismaService.transaction.findMany({
+      include: {
+        category: { select: { name: true } }
+      },
       where: {
         ...(options?.roles === 'ADMIN'
           ? {}
           : {
               userId: { equals: options?.sub }
             }),
-        ...dateFilter
+        effectiveDate: {
+          gte: start,
+          lt: end
+        }
       },
       skip,
       take: per_page
@@ -151,7 +117,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
           : {
               userId: { equals: options?.sub }
             }),
-        ...dateFilter
+        effectiveDate: {
+          gte: start,
+          lt: end
+        }
       }
     })
 

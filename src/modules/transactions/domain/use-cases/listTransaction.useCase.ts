@@ -20,10 +20,18 @@ export class ListTransactionUseCase {
     params: PaginateQuery,
     options?: UserPayload
   ): Promise<Response> {
-    const { page, per_page } = params
+    const { page, per_page, date } = params
 
-    if (!options) {
+    if (!options?.sub) {
       return left(new UseCaseError('User required'))
+    }
+
+    if (!page || !per_page) {
+      return left(new UseCaseError('Pagination parameters are required'))
+    }
+
+    if (!date) {
+      return left(new UseCaseError('Date parameter is required'))
     }
 
     const { data: transactionValue, meta } =

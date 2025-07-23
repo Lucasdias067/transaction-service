@@ -24,13 +24,14 @@ export class TransactionMapper {
       type: transaction.type,
       userId: transaction.userId,
       categoryId: transaction.categoryId,
+      categoryName: transaction.categoryName,
       status: transaction.status,
       installmentNumber: transaction.installmentNumber,
       totalInstallments: transaction.totalInstallments,
       installmentGroupId: transaction.installmentGroupId,
       dueDate: transaction.dueDate,
       paidAt: transaction.paidAt,
-      EffectiveDate: transaction.EffectiveDate,
+      effectiveDate: transaction.effectiveDate,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt
     }

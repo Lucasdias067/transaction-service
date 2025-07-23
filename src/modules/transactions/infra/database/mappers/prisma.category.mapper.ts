@@ -6,7 +6,9 @@ import {
 
 export class PrismaTransactionMapper {
   static toEntity(
-    prismaTransaction: Prisma.TransactionGetPayload<{}>
+    prismaTransaction: Prisma.TransactionGetPayload<{
+      include: { category: { select: { name: true } } }
+    }>
   ): TransactionEntity {
     const transactionDomain = TransactionEntity.createFromPersistence({
       id: prismaTransaction.id,
@@ -16,12 +18,13 @@ export class PrismaTransactionMapper {
       userId: prismaTransaction.userId,
       status: prismaTransaction.status,
       categoryId: prismaTransaction.categoryId,
+      categoryName: prismaTransaction.category?.name,
       installmentNumber: prismaTransaction.installmentNumber ?? undefined,
       totalInstallments: prismaTransaction.totalInstallments ?? undefined,
       installmentGroupId: prismaTransaction.installmentGroupId ?? undefined,
       dueDate: prismaTransaction.dueDate ?? undefined,
       paidAt: prismaTransaction.paidAt ?? undefined,
-      EffectiveDate: prismaTransaction.EffectiveDate,
+      effectiveDate: prismaTransaction.effectiveDate,
       createdAt: prismaTransaction.createdAt,
       updatedAt: prismaTransaction.updatedAt
     })
@@ -42,7 +45,7 @@ export class PrismaTransactionMapper {
       installmentGroupId: transaction.installmentGroupId,
       dueDate: transaction.dueDate,
       paidAt: transaction.paidAt,
-      EffectiveDate: transaction.EffectiveDate,
+      effectiveDate: transaction.effectiveDate,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt
     }

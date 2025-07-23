@@ -9,9 +9,9 @@ export interface TransactionRequestDto {
   status: TransactionStatus
   installmentNumber?: number
   totalInstallments?: number
-  dueDate?: Date 
-  paidAt?: Date 
-  EffectiveDate: Date 
+  dueDate?: Date
+  paidAt?: Date
+  effectiveDate: Date
 }
 
 export interface TransactionResponseDto<T> {
