@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
 import { PasswordHasherRepository } from 'src/infra/bcrypt/passwordHasher.repository'
-import { findUserByEmailUseCase } from 'src/modules/users/domain/use-cases/findUserByEmail.UseCase'
+import { findByEmailUseCase } from 'src/modules/users/domain/use-cases/findByEmail.UseCase'
 import {
   UserLoginRequestDto,
   UserLoginResponseDto
@@ -17,11 +17,11 @@ export class LoginUserUseCase {
     @Inject('bcryptService')
     private hashService: PasswordHasherRepository,
     private jwtService: JwtService,
-    private findUserByEmailUseCase: findUserByEmailUseCase
+    private findByEmailUseCase: findByEmailUseCase
   ) {}
 
   async execute(data: UserLoginRequestDto): Promise<Response> {
-    const findUserEmail = await this.findUserByEmailUseCase.execute(data.email)
+    const findUserEmail = await this.findByEmailUseCase.execute(data.email)
 
     if (findUserEmail.isLeft()) {
       return left(findUserEmail.value)

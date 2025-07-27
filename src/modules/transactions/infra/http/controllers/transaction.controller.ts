@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -13,6 +15,7 @@ import { PaginateQuery } from 'src/core/dtos/dtos'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'
+import { DeleteTransactionUseCase } from 'src/modules/transactions/domain/use-cases/deleteTransaction.useCase'
 import { ListTransactionUseCase } from 'src/modules/transactions/domain/use-cases/listTransaction.useCase'
 import { TransactionRequestDto } from '../dtos/transaction.dto'
 
@@ -21,7 +24,8 @@ import { TransactionRequestDto } from '../dtos/transaction.dto'
 export class TransactionController {
   constructor(
     private readonly createTransactionUseCase: CreateTransactionUseCase,
-    private readonly listTransactionUseCase: ListTransactionUseCase
+    private readonly listTransactionUseCase: ListTransactionUseCase,
+    private readonly deleteTransactionUseCase: DeleteTransactionUseCase
   ) {}
 
   @Post()
@@ -46,6 +50,23 @@ export class TransactionController {
     const options = request.user
 
     const result = await this.listTransactionUseCase.execute(params, options)
+
+    if (result.isLeft()) {
+      const error = result.value
+      if (error instanceof UseCaseError) {
+        throw new BadRequestException(error.message)
+      }
+      throw new BadRequestException(error)
+    }
+
+    return result.value
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id: string, @Req() request: Request) {
+    const userId = request.user?.sub as string
+
+    const result = await this.deleteTransactionUseCase.execute(id, userId)
 
     if (result.isLeft()) {
       const error = result.value

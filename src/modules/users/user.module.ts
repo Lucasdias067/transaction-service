@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { BcryptService } from 'src/infra/bcrypt/bcrypt.service'
 import { UserRepository } from './domain/repositories/user.repository'
 import { CreateUserUseCase } from './domain/use-cases/createUser.UseCase'
-import { findUserByEmailUseCase } from './domain/use-cases/findUserByEmail.UseCase'
+import { findByEmailUseCase } from './domain/use-cases/findByEmail.UseCase'
 import { PrismaUserRepository } from './infra/database/repositories/prisma.user.repository'
 import { UserController } from './infra/http/controller/user.controller'
 
@@ -19,8 +19,8 @@ import { UserController } from './infra/http/controller/user.controller'
       useClass: BcryptService
     },
     CreateUserUseCase,
-    findUserByEmailUseCase
+    findByEmailUseCase
   ],
-  exports: [findUserByEmailUseCase, CreateUserUseCase]
+  exports: [findByEmailUseCase, CreateUserUseCase]
 })
 export class UserModule {}

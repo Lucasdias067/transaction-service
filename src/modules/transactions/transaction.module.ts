@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TransactionRepository } from './domain/repositories/transaction.repository'
 import { CreateTransactionUseCase } from './domain/use-cases/createTransaction.useCase'
+import { DeleteTransactionUseCase } from './domain/use-cases/deleteTransaction.useCase'
 import { ListTransactionUseCase } from './domain/use-cases/listTransaction.useCase'
 import { PrismaTransactionRepository } from './infra/database/repositories/prisma.transaction.repository'
 import { TransactionController } from './infra/http/controllers/transaction.controller'
@@ -13,7 +14,8 @@ import { TransactionController } from './infra/http/controllers/transaction.cont
       useClass: PrismaTransactionRepository
     },
     CreateTransactionUseCase,
-    ListTransactionUseCase
+    ListTransactionUseCase,
+    DeleteTransactionUseCase
   ]
 })
 export class TransactionModule {}

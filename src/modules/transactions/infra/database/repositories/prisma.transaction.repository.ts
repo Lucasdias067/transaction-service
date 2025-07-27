@@ -133,4 +133,21 @@ export class PrismaTransactionRepository implements TransactionRepository {
       }
     }
   }
+
+  async delete(id: string, userId?: string): Promise<void> {
+    await this.prismaService.transaction.delete({
+      where: { id, userId }
+    })
+  }
+
+  async findById(id: string): Promise<TransactionEntity | null> {
+    const transaction = await this.prismaService.transaction.findUnique({
+      where: { id },
+      include: {
+        category: { select: { name: true } }
+      }
+    })
+
+    return transaction ? PrismaTransactionMapper.toEntity(transaction) : null
+  }
 }

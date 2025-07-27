@@ -7,7 +7,7 @@ import { UserRepository } from '../repositories/user.repository'
 type Response = Either<UseCaseError, UsersEntityProps>
 
 @Injectable()
-export class findUserByEmailUseCase {
+export class findByEmailUseCase {
   constructor(private userRepository: UserRepository) {}
 
   async execute(email: string): Promise<Response> {
