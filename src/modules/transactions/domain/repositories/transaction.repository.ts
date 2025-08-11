@@ -13,5 +13,5 @@ export abstract class TransactionRepository {
   ): Promise<TransactionResponseDto<TransactionEntity>>
   abstract findById(id: string): Promise<TransactionEntity | null>
   // abstract save(id: string, transaction: Partial<Transaction>): Promise<Transaction>;
-  abstract delete(id: string, userId?: string): Promise<void>;
+  abstract delete(id: string, userId?: string): Promise<void>
 }

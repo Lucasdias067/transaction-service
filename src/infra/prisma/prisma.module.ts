@@ -15,7 +15,7 @@ export class PrismaModule {
     return {
       module: PrismaModule,
       providers: [prismaProvider],
-      exports: [prismaProvider],
+      exports: [prismaProvider]
     }
   }
 }
