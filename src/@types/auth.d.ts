@@ -1,4 +1,4 @@
-interface UserPayload {
+declare interface UserPayload {
   sub: string
   email: string
   roles: Role

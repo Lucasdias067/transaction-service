@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { PassportModule } from '@nestjs/passport'
+import { JwtModules } from 'src/infra/auth/jwt.module'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { JwtStrategy } from 'src/infra/auth/jwt-strategy.service'
-import { JwtModules } from 'src/infra/auth/jwt.module'
 import { BcryptService } from 'src/infra/bcrypt/bcrypt.service'
 import { RolesGuard } from 'src/infra/roles/roles.guard'
 import { UserModule } from '../users/user.module'
@@ -13,7 +13,7 @@ import { AuthController } from './infra/http/controller/auth.controller'
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
     JwtModules.forRoot(),
     PassportModule,
