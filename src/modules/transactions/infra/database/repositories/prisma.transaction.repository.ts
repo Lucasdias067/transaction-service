@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { randomUUID } from 'crypto'
-import { PaginateQuery } from 'src/core/dtos/dtos'
+import { PaginateQuery } from 'src/core/dtos/dto'
 import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { TransactionEntity } from 'src/modules/transactions/domain/entities/transaction.entity'
 import { TransactionRepository } from 'src/modules/transactions/domain/repositories/transaction.repository'

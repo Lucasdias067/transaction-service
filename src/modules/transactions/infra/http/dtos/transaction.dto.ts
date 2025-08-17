@@ -1,5 +1,8 @@
-import { TransactionStatus, TransactionType } from '@prisma/client'
-import { PaginatedResponse } from 'src/core/dtos/dtos'
+import {
+  PaginatedResponse,
+  TransactionStatus,
+  TransactionType
+} from 'src/core/dtos/dto'
 
 export interface TransactionRequestDto {
   title: string

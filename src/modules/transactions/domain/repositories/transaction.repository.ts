@@ -1,4 +1,4 @@
-import { PaginateQuery } from 'src/core/dtos/dtos'
+import { PaginateQuery } from 'src/core/dtos/dto'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionEntity } from '../entities/transaction.entity'
 

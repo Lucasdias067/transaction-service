@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { TransactionStatus, TransactionType } from 'src/core/dtos/dtos'
+import { TransactionStatus, TransactionType } from 'src/core/dtos/dto'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 
 export interface TransactionEntityProps {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PaginateQuery } from 'src/core/dtos/dtos'
+import { PaginateQuery } from 'src/core/dtos/dto'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionResponseDto } from '../../infra/http/dtos/transaction.dto'

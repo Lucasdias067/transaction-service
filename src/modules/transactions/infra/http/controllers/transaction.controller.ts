@@ -11,7 +11,7 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { Request } from 'express'
-import { PaginateQuery } from 'src/core/dtos/dtos'
+import { PaginateQuery } from 'src/core/dtos/dto'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
 import { CreateTransactionUseCase } from 'src/modules/transactions/domain/use-cases/createTransaction.useCase'

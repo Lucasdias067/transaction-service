@@ -1,4 +1,4 @@
-import { TransactionType } from 'src/core/dtos/dtos'
+import { TransactionType } from 'src/core/dtos/dto'
 
 export interface CategoryEntityProps {
   id: string
