@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer'
 import {
   IsEmail,
   IsNotEmpty,
@@ -6,22 +7,40 @@ import {
 } from 'class-validator'
 
 export class UserRequestDto {
+  /**
+   * Nome completo do usuário.
+   * @example 'Lucas da Silva'
+   */
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'O nome é obrigatório.' })
   name: string
 
-  @IsEmail()
+  /**
+   * E-mail único do usuário. Será convertido para minúsculas.
+   * @example 'lucas.silva@email.com'
+   */
+  @IsEmail({}, { message: 'O e-mail fornecido é inválido.' })
+  @IsNotEmpty({ message: 'O e-mail é obrigatório.' })
+  @Transform(({ value }) => value.toLowerCase())
   email: string
 
-  @IsNotEmpty()
+  /**
+   * Senha do usuário.
+   * @example 'SenhaForte@123'
+   */
   @IsStrongPassword(
     {},
     {
       message:
-        'Senha deve conter pelo menos 8 caracteres, incluindo maiúscula, minúscula, número e símbolo'
+        'A senha deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo.'
     }
   )
+  @IsNotEmpty({ message: 'A senha é obrigatória.' })
   password: string
+
+  // O campo 'role' foi REMOVIDO. Atribua 'USER' no seu service ao criar o usuário.
+  // Exemplo no service:
+  // const newUser = this.userRepository.create({ ...userData, role: 'USER' });
 
   @IsString()
   @IsNotEmpty()
