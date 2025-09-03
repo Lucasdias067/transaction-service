@@ -37,9 +37,8 @@ model Transaction {
   totalInstallments  Int?    @map("total_installments")
   installmentGroupId String? @map("installment_group_id")
 
-  dueDate      DateTime? @map("due_date")
-  paidAt       DateTime? @map("paid_at")
-  effectiveDate DateTime @map("effective_date")
+  dueDate      DateTime @map("due_date")
+  effectiveDate DateTime? @map("effective_date")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 

@@ -22,9 +22,8 @@ export class PrismaTransactionMapper {
       installmentNumber: prismaTransaction.installmentNumber ?? undefined,
       totalInstallments: prismaTransaction.totalInstallments ?? undefined,
       installmentGroupId: prismaTransaction.installmentGroupId ?? undefined,
-      dueDate: prismaTransaction.dueDate ?? undefined,
-      paidAt: prismaTransaction.paidAt ?? undefined,
-      effectiveDate: prismaTransaction.effectiveDate,
+      dueDate: prismaTransaction.dueDate,
+      effectiveDate: prismaTransaction.effectiveDate ?? undefined,
       createdAt: prismaTransaction.createdAt,
       updatedAt: prismaTransaction.updatedAt
     })
@@ -44,7 +43,6 @@ export class PrismaTransactionMapper {
       totalInstallments: transaction.totalInstallments,
       installmentGroupId: transaction.installmentGroupId,
       dueDate: transaction.dueDate,
-      paidAt: transaction.paidAt,
       effectiveDate: transaction.effectiveDate,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt

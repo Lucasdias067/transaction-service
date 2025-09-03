@@ -30,7 +30,6 @@ export class TransactionMapper {
       totalInstallments: transaction.totalInstallments,
       installmentGroupId: transaction.installmentGroupId,
       dueDate: transaction.dueDate,
-      paidAt: transaction.paidAt,
       effectiveDate: transaction.effectiveDate,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt

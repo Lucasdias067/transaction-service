@@ -48,16 +48,12 @@ export class TransactionRequestDto {
   totalInstallments?: number
 
   @IsDateString({}, { message: 'A data de vencimento é inválida.' })
-  @IsOptional()
-  dueDate?: Date
-
-  @IsDateString({}, { message: 'A data de pagamento é inválida.' })
-  @IsOptional()
-  paidAt?: Date
+  @IsNotEmpty()
+  dueDate: Date
 
   @IsDateString({}, { message: 'A data de efetivação é inválida.' })
-  @IsNotEmpty()
-  effectiveDate: Date
+  @IsOptional()
+  effectiveDate?: Date
 }
 
 export interface TransactionResponseDto<T> {

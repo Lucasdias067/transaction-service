@@ -17,10 +17,10 @@ export class ListTransactionUseCase {
   constructor(private transactionRepository: TransactionRepository) {}
 
   async execute(
-    params: PaginateQuery,
+    query: PaginateQuery,
     options?: UserPayload
   ): Promise<Response> {
-    const { page, per_page, date } = params
+    const { page, per_page, date } = query
 
     if (!options?.sub) {
       return left(new UseCaseError('User required'))
@@ -35,7 +35,7 @@ export class ListTransactionUseCase {
     }
 
     const { data: transactionValue, meta } =
-      await this.transactionRepository.list(params, options)
+      await this.transactionRepository.list(query, options)
 
     const transactions = transactionValue.map(TransactionMapper.toHTTP)
 

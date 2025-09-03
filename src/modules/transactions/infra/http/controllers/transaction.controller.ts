@@ -46,10 +46,10 @@ export class TransactionController {
   }
 
   @Get()
-  async list(@Query() params: PaginateQuery, @Req() request: Request) {
+  async list(@Query() query: PaginateQuery, @Req() request: Request) {
     const options = request.user
 
-    const result = await this.listTransactionUseCase.execute(params, options)
+    const result = await this.listTransactionUseCase.execute(query, options)
 
     if (result.isLeft()) {
       const error = result.value

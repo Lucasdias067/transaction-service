@@ -29,8 +29,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
     const totalOfInstallments = transaction.totalInstallments ?? 1
     const installmentGroupId = randomUUID()
     const userId = transaction.userId
-    const baseDate =
-      transaction.effectiveDate ?? transaction.dueDate ?? new Date()
+
+    const baseDate = transaction.dueDate
 
     const transactionInstances = Array.from({
       length: totalOfInstallments
@@ -48,9 +48,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
         installmentNumber: i + 1,
         totalInstallments: totalOfInstallments,
         installmentGroupId,
-        dueDate: installmentDate,
-        effectiveDate: transaction.effectiveDate,
-        paidAt: transaction.paidAt
+        dueDate: installmentDate, // Define a dueDate incremental
+        effectiveDate: transaction.effectiveDate // Data que foi efetivada a transação
       }
 
       const entityData = TransactionEntity.createFromDTO({ ...props, userId })
@@ -79,13 +78,13 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   async list(
-    params: PaginateQuery,
+    query: PaginateQuery,
     options?: UserPayload
   ): Promise<TransactionResponseDto<TransactionEntity>> {
-    const page = Number(params.page)
-    const per_page = Number(params.per_page)
+    const page = Number(query.page)
+    const per_page = Number(query.per_page)
 
-    const date = new Date(params.date as Date)
+    const date = new Date(query.date as Date)
     const start = new Date(date.getFullYear(), date.getMonth(), 1)
     const end = new Date(date.getFullYear(), date.getMonth() + 1, 1)
 
@@ -101,7 +100,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
           : {
               userId: { equals: options?.sub }
             }),
-        effectiveDate: {
+        dueDate: {
           gte: start,
           lt: end
         }
@@ -117,7 +116,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
           : {
               userId: { equals: options?.sub }
             }),
-        effectiveDate: {
+        dueDate: {
           gte: start,
           lt: end
         }
