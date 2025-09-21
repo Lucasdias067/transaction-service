@@ -90,38 +90,31 @@ export class PrismaTransactionRepository implements TransactionRepository {
 
     const skip = (page - 1) * per_page
 
-    const prismaTransaction = await this.prismaService.transaction.findMany({
-      include: {
-        category: { select: { name: true } }
-      },
-      where: {
-        ...(options?.roles === 'ADMIN'
-          ? {}
-          : {
-              userId: { equals: options?.sub }
-            }),
-        dueDate: {
-          gte: start,
-          lt: end
-        }
-      },
-      skip,
-      take: per_page
-    })
-
-    const totalTransactions = await this.prismaService.transaction.count({
-      where: {
-        ...(options?.roles === 'ADMIN'
-          ? {}
-          : {
-              userId: { equals: options?.sub }
-            }),
-        dueDate: {
-          gte: start,
-          lt: end
-        }
+    const whereClause = {
+      ...(options?.roles === 'ADMIN'
+        ? {}
+        : {
+            userId: { equals: options?.sub }
+          }),
+      dueDate: {
+        gte: start,
+        lt: end
       }
-    })
+    }
+
+    const [totalTransactions, prismaTransaction] = await Promise.all([
+      this.prismaService.transaction.count({
+        where: whereClause
+      }),
+      this.prismaService.transaction.findMany({
+        include: {
+          category: { select: { name: true } }
+        },
+        where: whereClause,
+        skip,
+        take: per_page
+      })
+    ])
 
     const data = prismaTransaction.map(PrismaTransactionMapper.toEntity)
 

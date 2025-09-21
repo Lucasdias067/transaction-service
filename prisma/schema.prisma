@@ -9,15 +9,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  isActive     Boolean       @default(true) @map("is_active")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
   categories   Category[]
   transactions Transaction[]
 
@@ -27,30 +26,27 @@ model User {
 }
 
 model Transaction {
-  id     String            @id @default(uuid())
-  title  String
-  amount Decimal
-  type   TransactionType
-  status TransactionStatus
-
-  installmentNumber  Int?    @map("installment_number")
-  totalInstallments  Int?    @map("total_installments")
-  installmentGroupId String? @map("installment_group_id")
-
-  dueDate      DateTime @map("due_date")
-  effectiveDate DateTime? @map("effective_date")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-
-  userId     String @map("user_id")
-  categoryId String @map("category_id")
-
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                 String            @id @default(uuid())
+  title              String
+  amount             Decimal
+  type               TransactionType
+  installmentNumber  Int?              @map("installment_number")
+  totalInstallments  Int?              @map("total_installments")
+  installmentGroupId String?           @map("installment_group_id")
+  status             TransactionStatus
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  categoryId         String            @map("category_id")
+  dueDate            DateTime          @map("due_date")
+  userId             String            @map("user_id")
+  effectiveDate      DateTime?         @map("effective_date")
+  category           Category          @relation(fields: [categoryId], references: [id])
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([installmentGroupId, installmentNumber], name: "unique_installment")
   @@index([userId, type])
   @@index([categoryId])
+  @@index([userId, dueDate])
   @@index([status])
   @@index([dueDate])
   @@index([installmentGroupId])
@@ -59,13 +55,11 @@ model Transaction {
 }
 
 model Category {
-  id   String          @id @default(uuid())
-  name String
-  type TransactionType
-
-  userId String? @map("user_id")
-
-  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id           String          @id @default(uuid())
+  name         String
+  type         TransactionType
+  userId       String?         @map("user_id")
+  user         User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
 
   @@unique([name, userId, type], name: "unique_category_per_user")
