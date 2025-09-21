@@ -16,7 +16,7 @@ export class PrismaUserMapper {
     return userEntity
   }
 
-  static toPersistence(user: UserEntity): Prisma.UserGetPayload<{}> {
+  static toPersistence(user: UserEntity): Prisma.UserCreateInput {
     const userPersistence = {
       id: user.id,
       name: user.name,

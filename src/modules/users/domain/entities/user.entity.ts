@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 export interface UsersEntityProps {
   id: string
   name: string
@@ -46,5 +48,25 @@ export class UserEntity implements UsersEntityProps {
 
   get updatedAt(): Date {
     return this.props.updatedAt
+  }
+
+  static create(
+    props: Omit<UsersEntityProps, 'id' | 'createdAt' | 'updatedAt'>
+  ): UserEntity {
+    return new UserEntity({
+      ...props,
+      id: randomUUID(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+  }
+
+  updatePassword(newPassword: string): void {
+    // Validações de domínio aqui
+    if (!newPassword || newPassword.length < 8) {
+      throw new Error('Password must be at least 8 characters')
+    }
+    this.props.password = newPassword
+    this.props.updatedAt = new Date()
   }
 }

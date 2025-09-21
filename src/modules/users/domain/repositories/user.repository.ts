@@ -4,7 +4,7 @@ export abstract class UserRepository {
   abstract create(user: UserEntity): Promise<UserEntity>
   abstract findByEmail(email: string): Promise<UserEntity | null>
   abstract findById(id: string): Promise<UserEntity | null>
-  // abstract update(user: UserEntity): Promise<UserEntity>
+  abstract update(userId: string, user: UserEntity): Promise<UserEntity>
   // abstract delete(id: string): Promise<void>
   // abstract existsByEmail(email: string): Promise<boolean>
 }

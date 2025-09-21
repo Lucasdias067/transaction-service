@@ -53,3 +53,24 @@ export class UserResponseDto {
   email: string
   role: Role
 }
+
+export class UpdateUserDto {
+  @IsString()
+  @IsNotEmpty({ message: 'O nome é obrigatório.' })
+  name: string
+
+  @IsEmail({}, { message: 'O e-mail fornecido é inválido.' })
+  @IsNotEmpty({ message: 'O e-mail é obrigatório.' })
+  @Transform(({ value }) => value.toLowerCase())
+  email: string
+
+  @IsStrongPassword(
+    {},
+    {
+      message:
+        'A senha deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo.'
+    }
+  )
+  @IsNotEmpty({ message: 'A senha é obrigatória.' })
+  password: string
+}

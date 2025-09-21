@@ -23,7 +23,8 @@ export class PrismaUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<UserEntity | null> {
     const findUser = await this.prismaService.user.findUnique({
       where: {
-        email
+        email,
+        isActive: true
       }
     })
 
@@ -37,7 +38,8 @@ export class PrismaUserRepository implements UserRepository {
   async findById(id: string): Promise<UserEntity | null> {
     const findUser = await this.prismaService.user.findUniqueOrThrow({
       where: {
-        id
+        id,
+        isActive: true
       }
     })
 
@@ -46,5 +48,16 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     return PrismaUserMapper.toDomain(findUser)
+  }
+
+  async update(userId: string, user: UserEntity): Promise<UserEntity> {
+    const userPersistence = PrismaUserMapper.toPersistence(user)
+
+    const updatedUser = await this.prismaService.user.update({
+      where: { id: userId, isActive: true },
+      data: userPersistence
+    })
+
+    return PrismaUserMapper.toDomain(updatedUser)
   }
 }
