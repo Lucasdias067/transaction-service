@@ -94,6 +94,18 @@ export class TransactionEntity implements TransactionEntityProps {
   static createFromDTO(
     dto: TransactionRequestDto & { userId: string }
   ): TransactionEntity {
+    if (dto.amount <= 0) {
+      throw new Error('Amount must be greater than zero')
+    }
+
+    if (dto.type === 'EXPENSE' && dto.status === 'RECEIVED') {
+      throw new Error('EXPENSE dtos cannot have status RECEIVED')
+    }
+
+    if (dto.type === 'INCOME' && dto.status === 'PAID') {
+      throw new Error('INCOME transactions cannot have status PAID')
+    }
+
     const now = new Date()
     return new TransactionEntity({
       id: randomUUID(),

@@ -68,13 +68,13 @@ export class TransactionController {
 
     const result = await this.deleteTransactionUseCase.execute(id, userId)
 
-    if (result.isLeft()) {
+   if (result.isLeft()) {
       const error = result.value
       if (error instanceof UseCaseError) {
         throw new BadRequestException(error.message)
       }
       throw new BadRequestException(error)
-    }
+    } 
 
     return result.value
   }

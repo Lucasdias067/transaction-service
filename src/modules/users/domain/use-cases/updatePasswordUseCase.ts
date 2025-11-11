@@ -18,13 +18,13 @@ export class UpdatePasswordUseCase {
     }
 
     try {
-      userExists.updatePassword(newPassword)
+      userExists.changePassword(newPassword)
     } catch (error) {
       return left(new UseCaseError(error.message))
     }
 
-    const updatedUser = await this.userRepository.update(userId, userExists)
+    const result = await this.userRepository.update(userId, userExists)
 
-    return right(updatedUser)
+    return right(result)
   }
 }

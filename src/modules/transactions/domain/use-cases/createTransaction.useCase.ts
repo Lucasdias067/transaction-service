@@ -19,62 +19,52 @@ export class CreateTransactionUseCase {
     transaction: TransactionRequestDto,
     userId: string
   ): Promise<Response> {
-    if (transaction.amount <= 0) {
-      return left(new UseCaseError('Amount must be greater than zero'))
-    }
-
-    if (transaction.type === 'EXPENSE' && transaction.status === 'RECEIVED') {
-      return left(
-        new UseCaseError('EXPENSE transactions cannot have status RECEIVED')
-      )
-    }
-
-    if (transaction.type === 'INCOME' && transaction.status === 'PAID') {
-      return left(
-        new UseCaseError('INCOME transactions cannot have status PAID')
-      )
-    }
-
     const isInstallmentTransaction =
       typeof transaction.totalInstallments === 'number' &&
       transaction.totalInstallments > 1
 
     if (isInstallmentTransaction) {
-      const transactionDomain = TransactionMapper.toEntity(
-        {
-          ...transaction,
-          installmentNumber: undefined
-        },
-        userId
-      )
+      try {
+        const transactionDomain = TransactionMapper.toEntity(
+          {
+            ...transaction,
+            installmentNumber: undefined
+          },
+          userId
+        )
 
-      const transactionValues =
-        await this.transactionRepository.createMany(transactionDomain)
+        const transactionValues =
+          await this.transactionRepository.createMany(transactionDomain)
 
-      if (!transactionValues) {
-        return left(new UseCaseError('Error on creating installments'))
+        if (!transactionValues) {
+          return left(new UseCaseError('Error on creating installments'))
+        }
+
+        const transactions = transactionValues.map(TransactionMapper.toHTTP)
+
+        return right(transactions)
+      } catch (error: any) {
+        return left(new UseCaseError(error.message))
       }
+    } else {
+      try {
+        const transactionMapperToEntity = TransactionMapper.toEntity(
+          transaction,
+          userId
+        )
 
-      const transactionValuesMapped = transactionValues.map(transactionValue =>
-        TransactionMapper.toHTTP(transactionValue)
-      )
+        const transactionValue = await this.transactionRepository.create(
+          transactionMapperToEntity
+        )
 
-      return right(transactionValuesMapped)
+        if (!transactionValue) {
+          return left(new UseCaseError('Error on creating transactions'))
+        }
+
+        return right(TransactionMapper.toHTTP(transactionValue))
+      } catch (error: any) {
+        return left(new UseCaseError(error.message))
+      }
     }
-
-    const transactionMapperToEntity = TransactionMapper.toEntity(
-      transaction,
-      userId
-    )
-
-    const transactionValue = await this.transactionRepository.create(
-      transactionMapperToEntity
-    )
-
-    if (!transactionValue) {
-      return left(new UseCaseError('Error on creating transactions'))
-    }
-
-    return right(TransactionMapper.toHTTP(transactionValue))
   }
 }

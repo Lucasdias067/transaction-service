@@ -7,7 +7,7 @@ export class JwtModules {
       global: true,
       useFactory: () => ({
         secret: process.env.JWT_SECRET_KEY,
-        signOptions: { expiresIn: '1h' }
+        signOptions: { expiresIn: '1d' }
       }),
       inject: [ConfigService]
     })

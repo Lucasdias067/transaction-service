@@ -50,6 +50,11 @@ export class UserEntity implements UsersEntityProps {
     return this.props.updatedAt
   }
 
+  set password(newPassword: string) {
+    this.props.password = newPassword
+    this.props.updatedAt = new Date()
+  }
+
   static create(
     props: Omit<UsersEntityProps, 'id' | 'createdAt' | 'updatedAt'>
   ): UserEntity {
@@ -61,12 +66,19 @@ export class UserEntity implements UsersEntityProps {
     })
   }
 
-  updatePassword(newPassword: string): void {
-    // Validações de domínio aqui
+  changePassword(newPassword: string) {
     if (!newPassword || newPassword.length < 8) {
       throw new Error('Password must be at least 8 characters')
     }
-    this.props.password = newPassword
-    this.props.updatedAt = new Date()
+
+    if (newPassword === this.props.password) {
+      throw new Error('New password must be different from the old one')
+    }
+
+    return new UserEntity({
+      ...this.props,
+      password: newPassword,
+      updatedAt: new Date()
+    })
   }
 }
