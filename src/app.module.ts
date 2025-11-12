@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { BcryptModule } from './infra/bcrypt/bcrypt.module'
 import { PrismaModule } from './infra/prisma/prisma.module'
@@ -10,6 +11,12 @@ import { UserModule } from './modules/users/user.module'
   imports: [
     PrismaModule.forRoot(),
     BcryptModule.forRoot(),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT)
+      }
+    }),
     TransactionModule,
     UserModule,
     AuthModule,

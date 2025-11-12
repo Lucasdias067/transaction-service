@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
+import { Queue } from 'bullmq'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
@@ -13,7 +15,10 @@ type Response = Either<
 
 @Injectable()
 export class CreateTransactionUseCase {
-  constructor(private transactionRepository: TransactionRepository) {}
+  constructor(
+    private transactionRepository: TransactionRepository,
+    @InjectQueue('notification') private notificationQueue: Queue
+  ) {}
 
   async execute(
     transaction: TransactionRequestDto,
@@ -24,47 +29,49 @@ export class CreateTransactionUseCase {
       transaction.totalInstallments > 1
 
     if (isInstallmentTransaction) {
-      try {
-        const transactionDomain = TransactionMapper.toEntity(
-          {
-            ...transaction,
-            installmentNumber: undefined
-          },
-          userId
-        )
+      const transactionDomain = TransactionMapper.toEntity(
+        {
+          ...transaction,
+          installmentNumber: undefined
+        },
+        userId
+      )
 
-        const transactionValues =
-          await this.transactionRepository.createMany(transactionDomain)
+      const transactionValues =
+        await this.transactionRepository.createMany(transactionDomain)
 
-        if (!transactionValues) {
-          return left(new UseCaseError('Error on creating installments'))
-        }
-
-        const transactions = transactionValues.map(TransactionMapper.toHTTP)
-
-        return right(transactions)
-      } catch (error: any) {
-        return left(new UseCaseError(error.message))
+      if (!transactionValues) {
+        return left(new UseCaseError('Error on creating installments'))
       }
-    } else {
-      try {
-        const transactionMapperToEntity = TransactionMapper.toEntity(
-          transaction,
-          userId
-        )
 
-        const transactionValue = await this.transactionRepository.create(
-          transactionMapperToEntity
-        )
+      const transactions = transactionValues.map(TransactionMapper.toHTTP)
 
-        if (!transactionValue) {
-          return left(new UseCaseError('Error on creating transactions'))
-        }
+      await this.notificationQueue.add('sendTransactionNotification', {
+        userId,
+        message: `Your ${transaction.totalInstallments} installments transaction has been created successfully.`
+      })
 
-        return right(TransactionMapper.toHTTP(transactionValue))
-      } catch (error: any) {
-        return left(new UseCaseError(error.message))
-      }
+      return right(transactions)
     }
+
+    const transactionMapperToEntity = TransactionMapper.toEntity(
+      transaction,
+      userId
+    )
+
+    const transactionValue = await this.transactionRepository.create(
+      transactionMapperToEntity
+    )
+
+    if (!transactionValue) {
+      return left(new UseCaseError('Error on creating transactions'))
+    }
+
+    await this.notificationQueue.add('sendTransactionNotification', {
+      userId,
+      message: `Your ${transaction.totalInstallments} installments transaction has been created successfully.`
+    })
+
+    return right(TransactionMapper.toHTTP(transactionValue))
   }
 }
