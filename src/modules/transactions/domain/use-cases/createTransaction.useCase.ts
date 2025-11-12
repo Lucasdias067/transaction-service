@@ -1,8 +1,7 @@
-import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
-import { Queue } from 'bullmq'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
+import { NotificationRepository } from 'src/modules/notifications/domain/notification.repository'
 import { TransactionRequestDto } from '../../infra/http/dtos/transaction.dto'
 import { TransactionEntityProps } from '../entities/transaction.entity'
 import { TransactionMapper } from '../mappers/transaction.mapper'
@@ -17,7 +16,7 @@ type Response = Either<
 export class CreateTransactionUseCase {
   constructor(
     private transactionRepository: TransactionRepository,
-    @InjectQueue('notification') private notificationQueue: Queue
+    private notificationQueue: NotificationRepository
   ) {}
 
   async execute(
@@ -46,9 +45,9 @@ export class CreateTransactionUseCase {
 
       const transactions = transactionValues.map(TransactionMapper.toHTTP)
 
-      await this.notificationQueue.add('sendTransactionNotification', {
+      await this.notificationQueue.sendTransactionEmail({
         userId,
-        message: `Your ${transaction.totalInstallments} installments transaction has been created successfully.`
+        message: `Your transaction has been created successfully.`
       })
 
       return right(transactions)
@@ -67,9 +66,9 @@ export class CreateTransactionUseCase {
       return left(new UseCaseError('Error on creating transactions'))
     }
 
-    await this.notificationQueue.add('sendTransactionNotification', {
+    await this.notificationQueue.sendTransactionEmail({
       userId,
-      message: `Your ${transaction.totalInstallments} installments transaction has been created successfully.`
+      message: `Your transaction has been created successfully.`
     })
 
     return right(TransactionMapper.toHTTP(transactionValue))

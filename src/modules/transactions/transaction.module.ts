@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { NotificationModule } from '../notifications/notification.module'
 import { TransactionRepository } from './domain/repositories/transaction.repository'
 import { CreateTransactionUseCase } from './domain/use-cases/createTransaction.useCase'
 import { DeleteTransactionUseCase } from './domain/use-cases/deleteTransaction.useCase'
@@ -8,6 +9,7 @@ import { PrismaTransactionRepository } from './infra/database/repositories/prism
 import { TransactionController } from './infra/http/controllers/transaction.controller'
 
 @Module({
+  imports: [NotificationModule],
   controllers: [TransactionController],
   providers: [
     {

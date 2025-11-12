@@ -4,6 +4,7 @@ import { BcryptModule } from './infra/bcrypt/bcrypt.module'
 import { PrismaModule } from './infra/prisma/prisma.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/categories/category.module'
+import { NotificationModule } from './modules/notifications/notification.module'
 import { TransactionModule } from './modules/transactions/transaction.module'
 import { UserModule } from './modules/users/user.module'
 
@@ -20,7 +21,8 @@ import { UserModule } from './modules/users/user.module'
     TransactionModule,
     UserModule,
     AuthModule,
-    CategoryModule
+    CategoryModule,
+    NotificationModule
   ]
 })
 export class AppModule {}
