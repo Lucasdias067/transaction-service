@@ -2,12 +2,13 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { NotificationConsumer } from './application/notification.consumer'
 import { NotificationRepository } from './domain/notification.repository'
-import { NotificationQueueProducer } from './infra/queue/notification-queue.producer'
+import { NOTIFICATION_QUEUE } from './queue/contants'
+import { NotificationQueueProducer } from './queue/notification-queue.producer'
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'notification',
+      name: NOTIFICATION_QUEUE,
       defaultJobOptions: {
         attempts: 3,
         backoff: {

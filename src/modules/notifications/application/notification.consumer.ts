@@ -1,21 +1,25 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 import { Job } from 'bullmq'
+import { JOB, NOTIFICATION_QUEUE } from '../queue/contants'
 
 interface EmailJobData {
   userId: string
   message: string
 }
 
-@Processor('notification')
+type JobData = EmailJobData
+type JobName = JOB.SEND_EMAIL
+
+@Processor(NOTIFICATION_QUEUE)
 export class NotificationConsumer extends WorkerHost {
   private readonly logger = new Logger(NotificationConsumer.name)
 
-  async process(job: Job) {
+  async process(job: Job<JobData, void, JobName>): Promise<void> {
     this.logger.log(`Processing job ${job.id} of type ${job.name}`)
 
     switch (job.name) {
-      case 'send-email':
+      case JOB.SEND_EMAIL:
         return this.sendTransactionEmail(job.data)
       default:
         throw new Error('Unknown job type')

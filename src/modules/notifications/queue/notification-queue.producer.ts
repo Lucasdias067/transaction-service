@@ -4,19 +4,14 @@ import { Queue } from 'bullmq'
 import {
   NotificationRepository,
   SendEmailParams
-} from '../../domain/notification.repository'
+} from '../domain/notification.repository'
+import { JOB, NOTIFICATION_QUEUE } from './contants'
 
 @Injectable()
 export class NotificationQueueProducer implements NotificationRepository {
-  constructor(@InjectQueue('notification') private readonly queue: Queue) {}
+  constructor(@InjectQueue(NOTIFICATION_QUEUE) private readonly queue: Queue) {}
 
   async sendTransactionEmail(params: SendEmailParams): Promise<void> {
-    await this.queue.add('send-email', params, {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 2000
-      }
-    })
+    await this.queue.add(JOB.SEND_EMAIL, params)
   }
 }
