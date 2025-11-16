@@ -4,5 +4,5 @@ export interface SendEmailParams {
 }
 
 export abstract class NotificationRepository {
-  abstract sendTransactionEmail(params: SendEmailParams): Promise<void>
+  abstract sendTransactionEmail(params: SendEmailParams): void
 }

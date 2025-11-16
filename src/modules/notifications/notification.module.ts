@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
+import { NovuModule } from 'src/infra/services/novu/novu.module'
 import { NotificationConsumer } from './application/notification.consumer'
 import { NotificationRepository } from './domain/notification.repository'
 import { NOTIFICATION_QUEUE } from './queue/contants'
@@ -16,7 +17,8 @@ import { NotificationQueueProducer } from './queue/notification-queue.producer'
           delay: 2000
         }
       }
-    })
+    }),
+    NovuModule
   ],
   providers: [
     { provide: NotificationRepository, useClass: NotificationQueueProducer },

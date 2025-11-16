@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UseCaseError } from 'src/core/errors/UseCaseErrors'
 import { Either, left, right } from 'src/core/logic/Either'
@@ -14,7 +14,6 @@ type Response = Either<Error, UserLoginResponseDto>
 @Injectable()
 export class LoginUserUseCase {
   constructor(
-    @Inject('bcryptService')
     private hashService: PasswordHasherRepository,
     private jwtService: JwtService,
     private findByEmailUseCase: findByEmailUseCase

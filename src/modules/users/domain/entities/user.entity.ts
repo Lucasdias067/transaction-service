@@ -12,47 +12,51 @@ export interface UsersEntityProps {
 }
 
 export class UserEntity implements UsersEntityProps {
-  private props: UsersEntityProps
+  private _props: UsersEntityProps
 
   constructor(props: UsersEntityProps) {
-    this.props = { ...props }
+    this._props = { ...props }
+  }
+
+  get props(): UsersEntityProps {
+    return this._props
   }
 
   get id(): string {
-    return this.props.id
+    return this._props.id
   }
 
   get name(): string {
-    return this.props.name
+    return this._props.name
   }
 
   get email(): string {
-    return this.props.email
+    return this._props.email
   }
 
   get password(): string {
-    return this.props.password
+    return this._props.password
   }
 
   get role(): Role {
-    return this.props.role
+    return this._props.role
   }
 
   get isActive(): boolean {
-    return this.props.isActive
+    return this._props.isActive
   }
 
   get createdAt(): Date {
-    return this.props.createdAt
+    return this._props.createdAt
   }
 
   get updatedAt(): Date {
-    return this.props.updatedAt
+    return this._props.updatedAt
   }
 
   set password(newPassword: string) {
-    this.props.password = newPassword
-    this.props.updatedAt = new Date()
+    this._props.password = newPassword
+    this._props.updatedAt = new Date()
   }
 
   static create(
@@ -76,7 +80,7 @@ export class UserEntity implements UsersEntityProps {
     }
 
     return new UserEntity({
-      ...this.props,
+      ...this._props,
       password: newPassword,
       updatedAt: new Date()
     })

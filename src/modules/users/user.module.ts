@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
-import { BcryptService } from 'src/infra/bcrypt/bcrypt.service'
+import { BcryptModule } from 'src/infra/bcrypt/bcrypt.module'
+import { NovuModule } from 'src/infra/services/novu/novu.module'
 import { UserRepository } from './domain/repositories/user.repository'
 import { CreateUserUseCase } from './domain/use-cases/createUser.UseCase'
 import { findByEmailUseCase } from './domain/use-cases/findByEmail.UseCase'
@@ -8,16 +9,12 @@ import { PrismaUserRepository } from './infra/database/repositories/prisma.user.
 import { UserController } from './infra/http/controller/user.controller'
 
 @Module({
-  imports: [],
+  imports: [BcryptModule, NovuModule],
   controllers: [UserController],
   providers: [
     {
       provide: UserRepository,
       useClass: PrismaUserRepository
-    },
-    {
-      provide: 'bcryptService',
-      useClass: BcryptService
     },
     CreateUserUseCase,
     findByEmailUseCase,

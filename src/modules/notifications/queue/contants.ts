@@ -1,5 +1,5 @@
 export const NOTIFICATION_QUEUE = 'notification'
 
-export enum JOB {
+export enum NOTIFICATION_JOB {
   SEND_EMAIL = 'send-email'
 }

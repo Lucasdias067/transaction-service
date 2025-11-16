@@ -43,14 +43,12 @@ export class CreateTransactionUseCase {
         return left(new UseCaseError('Error on creating installments'))
       }
 
-      const transactions = transactionValues.map(TransactionMapper.toHTTP)
-
-      await this.notificationQueue.sendTransactionEmail({
+      this.notificationQueue.sendTransactionEmail({
         userId,
         message: `Your transaction has been created successfully.`
       })
 
-      return right(transactions)
+      return right(transactionValues.map(TransactionMapper.toHTTP))
     }
 
     const transactionMapperToEntity = TransactionMapper.toEntity(
@@ -66,7 +64,7 @@ export class CreateTransactionUseCase {
       return left(new UseCaseError('Error on creating transactions'))
     }
 
-    await this.notificationQueue.sendTransactionEmail({
+    this.notificationQueue.sendTransactionEmail({
       userId,
       message: `Your transaction has been created successfully.`
     })
