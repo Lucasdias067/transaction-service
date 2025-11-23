@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch } from '@nestjs/common'
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common'
 import { UpdatePasswordUseCase } from 'src/modules/users/domain/use-cases/updatePasswordUseCase'
 
 @Controller('/users')
@@ -16,5 +16,13 @@ export class UserController {
     )
 
     return result
+  }
+
+  @Post('/:id/upload-avatar')
+  async updateUserAvatar(
+    @Param('id') id: string,
+    @Body() data: { avatarUrl: string }
+  ) {
+    return { message: `User ${id} avatar uploaded to ${data.avatarUrl}` }
   }
 }

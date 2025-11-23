@@ -10,7 +10,7 @@ interface EmailJobData {
 }
 
 type JobData = EmailJobData
-type JobName = NOTIFICATION_JOB.SEND_EMAIL
+type JobName = NOTIFICATION_JOB
 
 @Processor(NOTIFICATION_QUEUE)
 export class NotificationConsumer extends WorkerHost {
